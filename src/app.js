@@ -9,9 +9,12 @@ const fileUpload = require('express-fileupload');
 
 app.use(fileUpload());  
 app.use(cors());
-const Admin  = require('./routers/admin')     
+const Admin  = require('./routers/admin')  
+const Vehicle = require('./routers/vehicle'); 
 
 app.use('/api/v1/',Admin);
+app.use('/api/v1/',Vehicle);
+
   
 
 app.use('/public/profiles', express.static('public/profiles'))
