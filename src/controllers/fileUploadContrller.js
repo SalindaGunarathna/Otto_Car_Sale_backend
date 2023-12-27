@@ -31,8 +31,10 @@ const authenticateAPI = async () => {
         // Authenticate client 
         const drive = google.drive({
             version: 'v3',
-            auth: oauth2client
+            auth: oauth2client 
         })
+
+        console.log("run authonticate")
 
         oauth2client.setCredentials({ refresh_token: REFRESH_TOKEN })
 
@@ -65,6 +67,9 @@ const uploadImageToDrive = async (file) => {
         // call the authenticateAPI function for google API Authentication 
         const drive = await authenticateAPI();
 
+
+        console.log("run authonticate2")
+
         // Upload the file to Google Drive
         const response = await drive.files.create({
             requestBody: {
@@ -79,6 +84,9 @@ const uploadImageToDrive = async (file) => {
 
         //  use this file id to uniquely identify uploaded file 
         const fileID = response.data.id
+
+
+        console.log(fileID)
 
 
         // get file url from drive storage
@@ -96,12 +104,15 @@ const uploadImageToDrive = async (file) => {
             })
 
         } catch (error) {
-            next(error)
+            console.log(error)
+            //next(error)
         }
 
         // set file Url  path to store in data base 
         const fileUploadPath = result_url.data.webViewLink
 
+        console.log(fileUploadPath)
+  
 
         // delete Temporary  local file 
         fs.unlink(filepath, (err) => {
@@ -115,6 +126,9 @@ const uploadImageToDrive = async (file) => {
         return { fileID, fileUploadPath }
 
     } catch (error) {
+
+
+        console.log(error)
         next(error);
     }
 };

@@ -5,8 +5,9 @@ const Vehicle = require('../model/vehicle');
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
-const {uploadImageToDrive,deleteFile} = require("./fileUploadContrller")
+const { uploadImageToDrive, deleteFile } = require("./fileUploadContrller")
 
+const VehicleQueryBuilder = require('./vehicleQueryBullder');
 
 
 // add new vehicle 
@@ -31,7 +32,11 @@ exports.addvehicle = async (req, res, next) => {
         assembled,
         vehicleType,
         brand,
-        
+        style,
+        model,
+        manufacturedYear
+
+
 
     } = req.body;
 
@@ -40,18 +45,25 @@ exports.addvehicle = async (req, res, next) => {
     try {
 
         if (!vehicleId || !engineNo) {
-            
+
             throw createHttpError(400, "please provide all required information")
         }
-        const { image } = req.files
-        const { fileID, fileUploadPath } = await uploadImageToDrive(image);
+        const image = req.files
+
+        if (image) {
+            var { fileID, fileUploadPath } = await uploadImageToDrive(image);
+
+            album.push({
+                photoURL: fileUploadPath,
+                photID: fileID
+            })
+
+        }
+
 
         console.log(fileID)
 
-        album.push({
-            photoURL: fileUploadPath,
-            photID: fileID
-        })
+
 
         const vehicle = new Vehicle({
 
@@ -73,6 +85,9 @@ exports.addvehicle = async (req, res, next) => {
             assembled,
             vehicleType,
             brand,
+            style,
+            model,
+            manufacturedYear,
             dimensions: {
                 length,
                 height,
@@ -101,7 +116,7 @@ exports.deleteVehicle = async (req, res, next) => {
     try {
         const vehicle = await Vehicle.findOneAndDelete({ vehicleId: vehicleID })
 
-       const file_id =  vehicle.album[0].photID
+        const file_id = vehicle.album[0].photID
 
         const deleteStatus = await deleteFile(file_id)
         if (!vehicle) {
@@ -116,7 +131,6 @@ exports.deleteVehicle = async (req, res, next) => {
         next(error);
     }
 }
-
 
 // update vehicle 
 
@@ -159,16 +173,23 @@ exports.updateVehicle = async (req, res, next) => {
                 throw createHttpError(400, "please provide all required information")
             }
             const { image } = req.files
-            const { fileID, fileUploadPath } = await uploadImageToDrive(image);
 
-            album.push({
-                photoURL: fileUploadPath,
-                photID: fileID
-            })
+            if (image) {
+                var { fileID, fileUploadPath } = await uploadImageToDrive(image);
+            }
 
-            const file_id  = oldVehicle.album[0].fileID
+            if (fileID) {
 
-            const deleteStatus = await deleteFile(file_id)
+                album.push({
+                    photoURL: fileUploadPath,
+                    photID: fileID
+                })
+                const file_id = oldVehicle.album[0].fileID
+
+                var deleteStatus = await deleteFile(file_id)
+            }
+
+
 
             oldVehicle.vehicleId = vehicleId;
             oldVehicle.chassisNumber = chassisNumber;
@@ -193,20 +214,81 @@ exports.updateVehicle = async (req, res, next) => {
                 height,
                 width,
             };
-            // Add new photos to the album array
             oldVehicle.album = album;
+
             const result = await oldVehicle.save();
-
-
-
-            res.send({result,deleteStatus})
+            res.send({ result, deleteStatus })
 
         }
-
-
-
-
     } catch (error) {
         next(error);
     }
 };
+
+// Suggest vehicle
+
+exports.smilerTypeVehicle = async (req, res, next) => {
+    const fuelType = req.body.fuelType
+    const vehicleType = req.body.vehicleType
+    const seatingCapacity = req.body.seatingCapacity
+
+    try {
+
+        const similarTypeVehicles = await Vehicle.find({ seatingCapacity: seatingCapacity, vehicleType: vehicleType, fuelType: fuelType })
+
+        res.send(similarTypeVehicles)
+
+    } catch (error) {
+        next(error)
+
+    }
+
+}
+
+// retrieve one Vehicle
+
+exports.findOneVehicle = async (req, res, next) => {
+    const vehicle_ID = req.params.vehicleID
+ 
+    console.log(vehicle_ID) 
+    try {
+        const vehi = await Vehicle.find({ vehicleId: vehicle_ID });
+
+        console.log(vehi)
+        res.send(vehi)
+    } catch (error) {
+        next(error)
+
+    }
+}
+
+// retrieve vehicles by filtering 
+exports.retrieveVehicle = async (req, res, next) => {
+    const {
+        vehicleType,
+        brand,
+        model,
+        style,
+        condition,
+        manufacturedYear
+    } = req.body;
+
+    try {
+        const vehicleQueryBuilder = new VehicleQueryBuilder()
+            .setVehicleType(vehicleType)
+            .setBrand(brand)
+            .setModel(model)
+            .setStyle(style)
+            .setCondition(condition)
+            .setManufacturedYear(manufacturedYear);
+
+        const query = vehicleQueryBuilder.build();
+
+        const vehicles = await Vehicle.find(query);
+
+        res.send(vehicles);
+    } catch (error) {
+        next(error);
+    }
+};
+
