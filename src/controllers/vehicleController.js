@@ -26,7 +26,7 @@ exports.addvehicle = async (req, res, next) => {
         length,
         height,
         width,
-        
+
         fuelType,
         manufacturedCountry,
         assembled,
@@ -48,18 +48,22 @@ exports.addvehicle = async (req, res, next) => {
 
             throw createHttpError(400, "please provide all required information")
         }
-        const image = req.files
 
-        if (image) {
-            var { fileID, fileUploadPath } = await uploadImageToDrive(image);
+        console.log(req.files)
 
-            album.push({
-                photoURL: fileUploadPath,
-                photID: fileID
-            })
+        const images = req.files.image
 
-        }
+        console.log(`images:${images} `)
         
+        if (images && images.length > 0) {
+            for (const image of images) {
+                const { fileID, fileUploadPath } = await uploadImageToDrive(image); 
+                album.push({
+                    photoURL: fileUploadPath,
+                    photID: fileID
+                });
+            }
+        }
 
         const vehicle = new Vehicle({
 
@@ -75,7 +79,7 @@ exports.addvehicle = async (req, res, next) => {
             length,
             height,
             width,
-            
+
             fuelType,
             manufacturedCountry,
             assembled,
@@ -248,7 +252,7 @@ exports.findOneVehicle = async (req, res, next) => {
     try {
         const selectedVehicle = await Vehicle.find({ vehicleId: vehicle_ID });
 
-       
+
         res.send(selectedVehicle)
     } catch (error) {
         next(error)
@@ -278,9 +282,9 @@ exports.retrieveVehicle = async (req, res, next) => {
 
         const query = vehicleQueryBuilder.build();
 
-        const attributeList ='vehicleId   vehicleState companyName numberOfDoors color seatingCapacity condition dimensions  fuelType manufacturedCountry assembled vehicleType  brand  style model manufacturedYear dimensions album'
+        const attributeList = 'vehicleId   vehicleState companyName numberOfDoors color seatingCapacity condition dimensions  fuelType manufacturedCountry assembled vehicleType  brand  style model manufacturedYear dimensions album'
 
-        const vehicles = await Vehicle.find(query,attributeList);
+        const vehicles = await Vehicle.find(query, attributeList);
 
         res.send(vehicles);
     } catch (error) {

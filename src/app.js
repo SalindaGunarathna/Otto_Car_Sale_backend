@@ -5,6 +5,12 @@ const app = express()
 app.use(express.json());    
 const createHttpError = require('http-errors')
 const fileUpload = require('express-fileupload'); 
+const bodyParser = require('body-parser');
+
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(bodyParser.raw()); 
 
 
 app.use(fileUpload());  
