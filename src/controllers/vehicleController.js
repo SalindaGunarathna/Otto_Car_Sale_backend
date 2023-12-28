@@ -26,7 +26,7 @@ exports.addvehicle = async (req, res, next) => {
         length,
         height,
         width,
-        engineDisplacement,
+        
         fuelType,
         manufacturedCountry,
         assembled,
@@ -59,11 +59,7 @@ exports.addvehicle = async (req, res, next) => {
             })
 
         }
-
-
-        console.log(fileID)
-
-
+        
 
         const vehicle = new Vehicle({
 
@@ -79,7 +75,7 @@ exports.addvehicle = async (req, res, next) => {
             length,
             height,
             width,
-            engineDisplacement,
+            
             fuelType,
             manufacturedCountry,
             assembled,
@@ -109,7 +105,6 @@ exports.addvehicle = async (req, res, next) => {
 };
 
 //remove vehicle 
-
 exports.deleteVehicle = async (req, res, next) => {
 
     const vehicleID = req.params.vehicleID
@@ -249,13 +244,12 @@ exports.smilerTypeVehicle = async (req, res, next) => {
 
 exports.findOneVehicle = async (req, res, next) => {
     const vehicle_ID = req.params.vehicleID
- 
-    console.log(vehicle_ID) 
-    try {
-        const vehi = await Vehicle.find({ vehicleId: vehicle_ID });
 
-        console.log(vehi)
-        res.send(vehi)
+    try {
+        const selectedVehicle = await Vehicle.find({ vehicleId: vehicle_ID });
+
+       
+        res.send(selectedVehicle)
     } catch (error) {
         next(error)
 
@@ -284,7 +278,9 @@ exports.retrieveVehicle = async (req, res, next) => {
 
         const query = vehicleQueryBuilder.build();
 
-        const vehicles = await Vehicle.find(query);
+        const attributeList ='vehicleId   vehicleState companyName numberOfDoors color seatingCapacity condition dimensions  fuelType manufacturedCountry assembled vehicleType  brand  style model manufacturedYear dimensions album'
+
+        const vehicles = await Vehicle.find(query,attributeList);
 
         res.send(vehicles);
     } catch (error) {
@@ -292,3 +288,5 @@ exports.retrieveVehicle = async (req, res, next) => {
     }
 };
 
+
+// retrieve vehicles from customer 

@@ -11,7 +11,7 @@ const fs = require('fs');
 const { google } = require('googleapis');
 const { version } = require('os');
 
-const uploadImageToDrive = require("./fileUploadContrller")
+const { uploadImageToDrive, deleteFile } = require("./fileUploadContrller")
 
 
 

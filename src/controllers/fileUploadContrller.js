@@ -17,6 +17,8 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET
 const REDIRECT_URL = process.env.REDIRECT_URL
 const REFRESH_TOKEN = process.env.REFRESH_TOKEN
 
+
+
 // Authenticate API 
 const authenticateAPI = async () => {
 
@@ -45,7 +47,6 @@ const authenticateAPI = async () => {
     }
 
 }
-
 
 // upload file 
 const uploadImageToDrive = async (file) => {
@@ -128,8 +129,9 @@ const uploadImageToDrive = async (file) => {
     } catch (error) {
 
 
-        console.log(error)
-        next(error);
+        
+        res.send(error)
+       
     }
 };
 
@@ -147,7 +149,7 @@ const deleteFile = async (file_Id) => {
 
         return response.status;
     } catch (error) {
-        console.log(error)
+       res.send(error)
     }
 }
 

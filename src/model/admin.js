@@ -4,18 +4,43 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs')
 const jwt  = require('jsonwebtoken')
 
+require('dotenv').config(); 
+
+const SECRET_KEY = process.env.SECRET_KEY
+
+
+function validatePassword(value) {
+   
+ 
+  return  validator.isStrongPassword(value, {
+    minLength: 8,
+    minLowercase: 1,
+    minUppercase: 1, 
+    minNumbers: 0,
+    minSymbols: 1,
+    returnScore: false 
+  });
+}
+
+const passwordValidator = {
+  validator: validatePassword,
+  message: 'Password must be at least 8 characters with at least one uppercase and lowercase letter, and one special character (@#$%&).'
+};
+
+ 
 
 const AdminSchema = new Schema({
   firstName: {
     type: String,
     required: true,
-    default: 'John'
+    maxlength:60
+
 
   },
   lasttName: {
     type: String,
     required: true,
-    default: 'John'
+    maxlength:60
 
   },
   email: {
@@ -36,29 +61,13 @@ const AdminSchema = new Schema({
     type: String,
     required: true,
     trim: true,
-    validate: {
-      validator: function (value) {
-        return validator.isStrongPassword(value, {
-          minLength: 8,
-          minLowercase: 1,
-          minUppercase: 1,
-          minNumbers: 0,
-          minSymbols: 1,
-          returnScore: false
-        });
-
-      },
-      message:
-        'Password must be at least 8 characters with at least one uppercase and lowercase letter, and one special character (@#$%&).'
-
-
-    }
+    validate: [passwordValidator]
   },
   profile: { type: String },
   profileID: { type: String },
   tokens: [{
     token: String
-  }]
+  }] 
 });
 
 
@@ -97,7 +106,7 @@ AdminSchema.statics.findByCredentials = async (email, password) => {
 
 AdminSchema.methods.generateAuthToken = async function () {
   const admin = this;
-  const token =  jwt.sign({_id : admin._id.toString()},"mysecret")
+  const token =  jwt.sign({_id : admin._id.toString()},SECRET_KEY)
    admin.tokens = admin.tokens.concat({token})
    await admin.save()
 
@@ -106,6 +115,8 @@ AdminSchema.methods.generateAuthToken = async function () {
    return  token;   
 
 }
+
+
 
 const Admin = mongoose.model('Admin', AdminSchema);
 module.exports = Admin;
