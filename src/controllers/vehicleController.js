@@ -4,6 +4,10 @@ require('dotenv').config();
 const Vehicle = require('../model/vehicle');
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
+const Admin = require('../model/admin')
+require('dotenv').config();
+
+const SECRET_KEY = process.env.SECRET_KEY
 
 const { uploadImageToDrive, deleteFile } = require("./fileUploadContrller")
 
@@ -54,10 +58,10 @@ exports.addvehicle = async (req, res, next) => {
         const images = req.files.image
 
         console.log(`images:${images} `)
-        
+
         if (images && images.length > 0) {
             for (const image of images) {
-                const { fileID, fileUploadPath } = await uploadImageToDrive(image); 
+                const { fileID, fileUploadPath } = await uploadImageToDrive(image);
                 album.push({
                     photoURL: fileUploadPath,
                     photID: fileID
@@ -244,7 +248,7 @@ exports.smilerTypeVehicle = async (req, res, next) => {
 
 }
 
-// retrieve one Vehicle
+// retrieve one Vehicle by searching
 
 exports.findOneVehicle = async (req, res, next) => {
     const vehicle_ID = req.params.vehicleID
@@ -271,6 +275,8 @@ exports.retrieveVehicle = async (req, res, next) => {
         manufacturedYear
     } = req.body;
 
+    const token = req.params.token
+
     try {
         const vehicleQueryBuilder = new VehicleQueryBuilder()
             .setVehicleType(vehicleType)
@@ -284,7 +290,14 @@ exports.retrieveVehicle = async (req, res, next) => {
 
         const attributeList = 'vehicleId   vehicleState companyName numberOfDoors color seatingCapacity condition dimensions  fuelType manufacturedCountry assembled vehicleType  brand  style model manufacturedYear dimensions album'
 
-        const vehicles = await Vehicle.find(query, attributeList);
+        try {
+            var verifyAdmin = jwt.verify(token, SECRET_KEY)
+
+            var vehicles = await Vehicle.find(query);
+
+        } catch {
+            var vehicles = await Vehicle.find(query, attributeList);
+        }
 
         res.send(vehicles);
     } catch (error) {
@@ -293,4 +306,101 @@ exports.retrieveVehicle = async (req, res, next) => {
 };
 
 
+exports.retrieveAllVehicle = async (req, res, next) => {
+
+    const token = req.params.token
+
+    const attributeList = 'vehicleId   vehicleState companyName numberOfDoors color seatingCapacity condition dimensions  fuelType manufacturedCountry assembled vehicleType  brand  style model manufacturedYear dimensions album'
+
+    try {
+
+        try {
+            var verifyAdmin = jwt.verify(token, SECRET_KEY)
+
+            var vehicles = await Vehicle.find({});
+
+        } catch {
+            var vehicles = await Vehicle.find({}, attributeList);
+        }
+        const separatedVehicles = {
+            car: [],
+            bike: [],
+            van: [],
+            truck: [],
+            cab: []
+        };
+
+        vehicles.forEach(vehicle => {
+            switch (vehicle.vehicleType) {
+                case 'car':
+                    separatedVehicles.car.push(vehicle);
+                    break;
+                case 'bike':
+                    separatedVehicles.bike.push(vehicle);
+                    break;
+                case 'van':
+                    separatedVehicles.van.push(vehicle);
+                    break;
+                case 'truck':
+                    separatedVehicles.truck.push(vehicle);
+                    break;
+                case 'cab':
+                    separatedVehicles.cab.push(vehicle);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        res.send(separatedVehicles)
+
+
+    } catch (error) {
+        next(error)
+
+    }
+}
+
+// upload new image 
+exports.uploadImage = async (req, res, next) => {
+
+    const vehicleId = req.params.vehicleID
+
+    const images = req.files.image
+    if (images) {
+        try {
+            const vehicle = await Vehicle.findOne({ vehicleId: vehicleId })
+            if (vehicle) {
+
+                for (const image of images) {
+                    const { fileID, fileUploadPath } = await uploadImageToDrive(image);
+                    vehicle.album.push({
+                        photoURL: fileUploadPath,
+                        photID: fileID
+                    });
+                }
+
+                const updateVehicle = await vehicle.save()
+
+                res.status(200), send({
+                    updateVehicle,
+                    message: "Image uploaded successfully"
+                })
+
+
+
+            }
+
+
+        } catch (error) {
+            next(error)
+
+        }
+
+    } else {
+        throw createHttpError(404, "req,files are empty")
+    }
+
+
+}
 // retrieve vehicles from customer 
