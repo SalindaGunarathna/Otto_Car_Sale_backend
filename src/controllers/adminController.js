@@ -114,7 +114,7 @@ exports.resetPassword = async (req, res, next) => {
 //Crete new Admin  Controller function
 exports.create = async (req, res, next) => {
 
-    const { firstName, email, password } = req.body;  
+    const { firstName, email, password,lastName } = req.body;  
     try {
         if (!firstName || !email || !password) {
             throw createHttpError(400, "please provide all required information");
@@ -130,6 +130,7 @@ exports.create = async (req, res, next) => {
             firstName,
             email,
             password,
+            lastName,
             profile: fileUploadPath,
             profileID: fileID
         });

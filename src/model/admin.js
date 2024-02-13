@@ -37,7 +37,7 @@ const AdminSchema = new Schema({
 
 
   },
-  lasttName: {
+  lastName: {
     type: String,
     required: true,
     maxlength:60
