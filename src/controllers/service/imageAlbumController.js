@@ -31,12 +31,13 @@ const createImageAlbum = async (images) => {
 
 
 
-
+21
 
   return album;
 
 }
 
+// delete image albume
 const deleteAlbum = async (album) => {
   const images = album;
   for (const image of images) {

@@ -16,6 +16,9 @@ const {
   deleteFile,
 } = require("./service/fileUploadContrller");
 
+
+const emailSend = require("./service/sendEmail");
+
 exports.login = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -45,39 +48,32 @@ exports.forgotPassword = async (req, res, next) => {
     throw createHttpError(400, "missing email address");
   }
 
-  const password = process.env.PASSWORD;
-  const Sendmail = process.env.EMAIL;
+
   try {
-    const admin = await Admin.findOne({ email: email });
+    const admin = await Admin.findOne({ email: email }); 
     var userId = admin._id;
+    var username = admin.firstName
+    ;
     if (!admin) {
       throw createHttpError(400, "missing admin ");
     }
 
     const token = await admin.generateAuthToken();
+    const subject = "Octo Care sale System Reset password"
+    const text = ` 
+    Deare ${username}
+    you can reset your Octo care sale user account  password 
+    Please click on the below link to reset your password
+    http://localhost:3000/ResetPassword/${userId}/${token}
+    
+    do not shear this link 
+    
+    thak you 
+    Octo care sale `
 
-    var transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: Sendmail,
-        pass: password,
-      },
-    });
 
-    var mailOptions = {
-      from: Sendmail,
-      to: "salindalakshan99@gmail.com",
-      subject: "Sending Email using Node.js",
-      text: `http://localhost:3000/ResetPassword/${userId}/${token}`,
-    };
+     emailSend(email,subject,text); 
 
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Email sent: " + info.response);
-      }
-    });
 
     res.send({ token, userId });
   } catch (error) {

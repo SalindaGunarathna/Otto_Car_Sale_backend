@@ -39,7 +39,7 @@ const AdminSchema = new Schema({
   },
   lastName: {
     type: String,
-    required: true,
+    required: false,
     maxlength:60
 
   },
