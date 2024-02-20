@@ -1,0 +1,12 @@
+===============
+Customer 
+===============
+
+create customer 
+in happy path  =pass
+frogot password  happy path = pass
+reser password = happy path pass
+send email = happy path pass
+upload imaage = happy path pass 
+2024/02/20
+

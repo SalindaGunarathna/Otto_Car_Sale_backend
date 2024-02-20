@@ -1,30 +1,35 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const jwt  = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const { stripLow } = require('validator');
 
 
 
 const orderSchema = new mongoose.Schema({
-  orderID: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+
   orderedDate: {
     type: Date,
     required: true,
     default: Date.now,
   },
-  customer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'customer',
+  customerName: {
+    type:String,
+    
+    required: true,
+  },
+  customerEmail: {
+    type: String,
     required: true,
   },
   items: [{
-    Vehicle: {
+    vehicleID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'vehicle',
+      required: true,
+    },
+    vehicleName: {
+      type: String,
       required: true,
     },
     quantity: {
@@ -51,11 +56,11 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  note :{
-    type: String,
-    required: false,
-  }
+  chatBox: [{
+    customer: { type: String },
+    owner: { type: String }
+  }]
 });
 
 const Order = mongoose.model('Order', orderSchema);
-module.exports =Order;
+module.exports = Order;
