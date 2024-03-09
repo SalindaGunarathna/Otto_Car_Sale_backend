@@ -57,8 +57,9 @@ const orderSchema = new mongoose.Schema({
     required: true,
   },
   chatBox: [{
-    customer: { type: String },
-    owner: { type: String }
+    message: { type: String },
+    //customer: { type: String },
+    //owner: { type: String }
   }]
 });
 

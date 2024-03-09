@@ -15,6 +15,8 @@ class EmailMessage {
         Dear ${oreder.customerName},
         
         Thank you for your order! We're excited to let you know that your order has been successfully placed.
+
+        check the update status of your order
         
         Order Details:
         - Order Number: ${this.order._id}
@@ -23,6 +25,8 @@ class EmailMessage {
         - Total Amount: ${this.order.totalPrice}
         - Delivery Address: ${this.order.customerAddress}
         - Billing Address: ${this.order.billingAddress}
+        - Order Date: ${this.order.orderedDate}
+        - Status: ${this.order.status}
         
         We will process your order as soon as possible. 
         
