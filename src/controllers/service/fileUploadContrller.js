@@ -100,18 +100,20 @@ const uploadImageToDrive = async (file) => {
     }
 
     // set file Url  path to store in data base
+
+
     const fileUploadPath = result_url.data.webViewLink;
 
     console.log(fileUploadPath);
 
-    // delete Temporary  local file
-    // fs.unlink(filepath, (err) => {
-    //   if (err) {
-    //     console.error("Unable to delete local image file:", err);
-    //   } else {
-    //     console.log("Local image file deleted successfully.");
-    //   }
-    // });
+   // delete Temporary  local file
+    fs.unlink(filepath, (err) => {
+      if (err) {
+        console.error("Unable to delete local image file:", err);
+      } else {
+        console.log("Local image file deleted successfully.");
+      }
+    });
     console.log(fileID)
 
     return { fileID, fileUploadPath };  

@@ -21,7 +21,7 @@ const customer = require('./routers/customer');
 const order = require('./routers/orders');
 
 app.use('/api/v1/admin',Admin);
-app.use('/api/v1/',Vehicle);
+app.use('/api/v1/vehicles',Vehicle);
 app.use('/api/v1/customer/',customer);
 app.use('/api/v1/orders/',order);
 

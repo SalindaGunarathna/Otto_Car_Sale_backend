@@ -44,7 +44,7 @@ const deleteAlbum = async (album) => {
     const file_id = image.photID;
     const deleteStatus = await deleteFile(file_id);
 
-    if (!deleteStatus.success) {
+    if (deleteStatus !== 204) {
       throw createHttpError(400, "unable to delete image from drive");
     }
   };

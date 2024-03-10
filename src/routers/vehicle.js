@@ -7,7 +7,7 @@ const Vehicle =  require('../controllers/vehicleController');
 
 router.post("/addVehicle", Vehicle.addvehicle);
 
-router.delete("/deleteVehi/:vehicleID",adminAuth,Vehicle.deleteVehicle)
+router.delete("/deleteVehi/:vehicleID",Vehicle.deleteVehicle)
 
 router.get("/retrieveVehicles/:token",Vehicle.retrieveVehicle)
 
