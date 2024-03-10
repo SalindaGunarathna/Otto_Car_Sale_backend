@@ -139,7 +139,7 @@ exports.editOrder = async (req, res, next) => {
 
 
             // update vehicle data 
-            const updateOrde = await Order.findByIdAndUpdate(id, {
+            const updateOrde = await Order.findByIdAndUpdate(id, { 
                 customerName,
                 customerEmail,
                 quantity,

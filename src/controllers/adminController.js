@@ -85,7 +85,7 @@ exports.resetPassword = async (req, res, next) => {
   const { id, token } = req.params;
   const newPassword = req.body.password;
 
-  const verify = jwt.verify(token, "mysecret");
+  const verify = jwt.verify(token, "Occto_sale");
 
   if (verify) {
     hasspasword = await bcrypt.hash(newPassword, 12);
@@ -102,6 +102,8 @@ exports.resetPassword = async (req, res, next) => {
 
 //Crete new Admin  Controller function
 exports.create = async (req, res, next) => {
+
+
   const { firstName, email, password,lastName } = req.body;
   try {
     if (!firstName || !email || !password) {
