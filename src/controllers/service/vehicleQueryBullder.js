@@ -8,6 +8,9 @@ class VehicleQueryBuilder {
     setVehicleType(vehicleType) {
         if (vehicleType) {
             this.query.vehicleType = vehicleType;
+
+            console.log(this.query);
+            console.log("vehicle type");
         }
         return this;
     }
@@ -33,9 +36,9 @@ class VehicleQueryBuilder {
         return this;
     }
 
-    setCondition(condition) {
-        if (condition) {
-            this.query.condition = condition;
+    setfuelType(fuelType) {
+        if (fuelType) {
+            this.query.fuelType = fuelType;
         }
         return this;
     }

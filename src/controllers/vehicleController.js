@@ -246,10 +246,12 @@ exports.findOneVehicle = async (req, res, next) => {
 
 // retrieve vehicles by filtering by serching
 exports.retrieveVehicle = async (req, res, next) => {
-  const { vehicleType, brand, model, style, condition, manufacturedYear } =
+
+  const { vehicleType, brand, model, style, fuelType, manufacturedYear } =
     req.body;
 
   const token = req.params.token;
+  console.log(req.body);
 
   try {
     const vehicleQueryBuilder = new VehicleQueryBuilder()
@@ -257,7 +259,7 @@ exports.retrieveVehicle = async (req, res, next) => {
       .setBrand(brand)
       .setModel(model)
       .setStyle(style)
-      .setCondition(condition)
+      .setfuelType(fuelType)
       .setManufacturedYear(manufacturedYear);
 
     const query = vehicleQueryBuilder.build();
@@ -270,6 +272,8 @@ exports.retrieveVehicle = async (req, res, next) => {
 
       var vehicles = await Vehicle.find(query);
     } catch {
+
+      console.log(query);
       var vehicles = await Vehicle.find(query, attributeList);
     }
 
@@ -291,6 +295,8 @@ exports.retrieveAllVehicle = async (req, res, next) => {
 
       var vehicles = await Vehicle.find({});
     } catch {
+
+
       var vehicles = await Vehicle.find({}, attributeList);
     }
     const separatedVehicles = {
