@@ -112,8 +112,8 @@ exports.deleteVehicle = async (req, res, next) => {
   }
 };
 
-// update vehicle
 
+// update vehicle
 exports.updateVehicle = async (req, res, next) => {
   const {
     vehicleId,
@@ -136,10 +136,10 @@ exports.updateVehicle = async (req, res, next) => {
     brand,
   } = req.body;
 
-  const album = [];
+  var album = [];
 
   try {
-    const oldVehicle = await Vehicle.findOne({ vehicleId: vehicleId });
+    const oldVehicle = await Vehicle.findOne({ vehicleId : vehicleId });
 
     if (!oldVehicle) {
       throw createHttpError(404, "vehicle not Found ");
@@ -147,7 +147,8 @@ exports.updateVehicle = async (req, res, next) => {
 
 
       const { images } = req.files;
-      await validateVehicleData(req.body);
+      // since this is update no need to validate
+      // await validateVehicleData(req.body);
 
     if (images) {
        const  NewAlbum = await createImageAlbum(images);
@@ -155,12 +156,23 @@ exports.updateVehicle = async (req, res, next) => {
        album = oldVehicle.album;
 
         if (NewAlbum) {
-            for (const image of NewAlbum) {
-              album.push({
-                photoURL: image.fileUploadPath,
-                photID: image.fileID,
-              });
-            }
+          console.log( NewAlbum[0].photoURL, NewAlbum[0].photID);
+
+          album.push({
+            photoURL: NewAlbum[0].photoURL,
+            photID: NewAlbum[0].photID,
+          });
+
+
+            // for (const image of NewAlbum) {
+
+            //   console.log(image.fileUploadPath, image.fileID);
+
+            //   album.push({
+            //     photoURL: image.fileUploadPath,
+            //     photID: image.fileID,
+            //   });
+            // }
         }
         // var deleteStatus = await deleteFile(file_id);
     }
@@ -191,7 +203,7 @@ exports.updateVehicle = async (req, res, next) => {
       oldVehicle.album = album;
 
       const result = await oldVehicle.save();
-      res.send({ result, deleteStatus });
+      res.send({ result, album });
     }
   } catch (error) {
     next(error);
@@ -232,7 +244,7 @@ exports.findOneVehicle = async (req, res, next) => {
   }
 };
 
-// retrieve vehicles by filtering
+// retrieve vehicles by filtering by serching
 exports.retrieveVehicle = async (req, res, next) => {
   const { vehicleType, brand, model, style, condition, manufacturedYear } =
     req.body;

@@ -9,13 +9,15 @@ router.post("/addVehicle", Vehicle.addvehicle);
 
 router.delete("/deleteVehi/:vehicleID",Vehicle.deleteVehicle)
 
-router.get("/retrieveVehicles/:token",Vehicle.retrieveVehicle)
+router.get("/retrieveVehicles/:token",Vehicle.retrieveVehicle) //retrieve vehicles by filtering to customer
 
 router.get("/similarVehicles",Vehicle.smilerTypeVehicle)
 
 router.get("/findOneVehicle/:vehicleID",Vehicle.findOneVehicle)
 
 router.get("/retrieveAllVehicles/:token",Vehicle.retrieveAllVehicle)
+
+router.post("/editVehicle/:vehicleID",Vehicle.updateVehicle)
 
 
 module.exports = router;
