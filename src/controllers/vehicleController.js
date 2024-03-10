@@ -16,7 +16,7 @@ const {
 
 const VehicleQueryBuilder = require("./service/vehicleQueryBullder")
 
-const  validateVehicleData  = require("./service/validateVehicleData");
+const validateVehicleData = require("./service/validateVehicleData");
 const {
   createImageAlbum,
   deleteAlbum,
@@ -51,12 +51,12 @@ exports.addvehicle = async (req, res, next) => {
   var album = [];
 
   try {
-    const {image} = req.files;
+    const { image } = req.files;
 
- var validate   = await validateVehicleData(req.body);
+    var validate = await validateVehicleData(req.body);
 
-    
-     album = await createImageAlbum(image);
+
+    album = await createImageAlbum(image);
 
 
     const vehicle = new Vehicle({
@@ -139,7 +139,7 @@ exports.updateVehicle = async (req, res, next) => {
   var album = [];
 
   try {
-    const oldVehicle = await Vehicle.findOne({ vehicleId : vehicleId });
+    const oldVehicle = await Vehicle.findOne({ vehicleId: vehicleId });
 
     if (!oldVehicle) {
       throw createHttpError(404, "vehicle not Found ");
@@ -150,13 +150,13 @@ exports.updateVehicle = async (req, res, next) => {
       // since this is update no need to validate
       // await validateVehicleData(req.body);
 
-    if (images) {
-       const  NewAlbum = await createImageAlbum(images);
+      if (images) {
+        const NewAlbum = await createImageAlbum(images);
 
-       album = oldVehicle.album;
+        album = oldVehicle.album;
 
         if (NewAlbum) {
-          console.log( NewAlbum[0].photoURL, NewAlbum[0].photID);
+          console.log(NewAlbum[0].photoURL, NewAlbum[0].photID);
 
           album.push({
             photoURL: NewAlbum[0].photoURL,
@@ -164,18 +164,18 @@ exports.updateVehicle = async (req, res, next) => {
           });
 
 
-            // for (const image of NewAlbum) {
+          // for (const image of NewAlbum) {
 
-            //   console.log(image.fileUploadPath, image.fileID);
+          //   console.log(image.fileUploadPath, image.fileID);
 
-            //   album.push({
-            //     photoURL: image.fileUploadPath,
-            //     photID: image.fileID,
-            //   });
-            // }
+          //   album.push({
+          //     photoURL: image.fileUploadPath,
+          //     photID: image.fileID,
+          //   });
+          // }
         }
         // var deleteStatus = await deleteFile(file_id);
-    }
+      }
 
       oldVehicle.vehicleId = vehicleId;
       oldVehicle.chassisNumber = chassisNumber;
@@ -339,26 +339,36 @@ exports.retrieveAllVehicle = async (req, res, next) => {
 exports.uploadImage = async (req, res, next) => {
   const vehicleId = req.params.vehicleID;
 
-  const images = req.files.image;
-  if (images) {
+  const {image} = req.files;
+
+  if (image) {
     try {
       const vehicle = await Vehicle.findOne({ vehicleId: vehicleId });
-      if (vehicle) {
-        for (const image of images) {
-          const { fileID, fileUploadPath } = await uploadImageToDrive(image);
-          vehicle.album.push({
-            photoURL: fileUploadPath,
-            photID: fileID,
-          });
-        }
 
+
+      if (vehicle) {
+
+       
+
+        const NewAlbum = await createImageAlbum(image);
+
+
+
+        if (NewAlbum) {
+          console.log(NewAlbum[0].photoURL, NewAlbum[0].photID);
+
+          vehicle.album.push({
+            photoURL:NewAlbum[0].photoURL,
+            photID: NewAlbum[0].photID,
+          });
+
+
+        }
         const updateVehicle = await vehicle.save();
 
-        res.status(200),
-          send({
-            updateVehicle,
-            message: "Image uploaded successfully",
-          });
+        res.send(updateVehicle);
+
+
       }
     } catch (error) {
       next(error);
@@ -367,4 +377,6 @@ exports.uploadImage = async (req, res, next) => {
     throw createHttpError(404, "req,files are empty");
   }
 };
-// retrieve vehicles from customer
+
+
+

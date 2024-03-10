@@ -44,6 +44,8 @@ const authenticateAPI = async () => {
 
 // upload file
 const uploadImageToDrive = async (file) => {
+
+  console.log("step 1");
   try {
     if (!file) {
       throw createHttpError(404, "image not found");
@@ -51,6 +53,8 @@ const uploadImageToDrive = async (file) => {
     if (!file.mimetype.startsWith("image")) {
       throw createHttpError(400, "Only images are allowed");
     }
+
+    console.log("step 2");
 
     // set the local file path
     let filepath = __dirname + "../../../../public/file/" + file.name;

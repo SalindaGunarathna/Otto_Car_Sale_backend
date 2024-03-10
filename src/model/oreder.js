@@ -22,15 +22,30 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  customerMobileNumber: {
+    type: String,
+    required: true,
+    
+  },
   items: [{
-    vehicleID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'vehicle',
-      required: true,
-    },
-    vehicleName: {
+    vehicleBrand: {
       type: String,
       required: true,
+    },
+    vehicleModel: {
+      type: String,
+      required: true,
+    },
+    vehiclePriceRange: {
+      type: Number,
+      required: true,
+    },
+    vehicleType: {
+      type: String,
+    },
+    vehicleColor: {
+      type: String,
+      
     },
     quantity: {
       type: Number,
@@ -38,10 +53,6 @@ const orderSchema = new mongoose.Schema({
       min: 1,
     },
   }],
-  totalPrice: {
-    type: Number,
-    required: true,
-  },
   status: {
     type: String,
     enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
@@ -49,10 +60,6 @@ const orderSchema = new mongoose.Schema({
     default: 'pending',
   },
   customerAddress: {
-    type: String,
-    required: true,
-  },
-  billingAddress: {
     type: String,
     required: true,
   },

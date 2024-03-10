@@ -9,12 +9,15 @@ const createImageAlbum = async (images) => {
 
   var album = [];
 
-  var picture =images
+  var picture = images
   const { fileID, fileUploadPath } = await uploadImageToDrive(images);
-        album.push({
-          photoURL: fileUploadPath,
-          photID: fileID,
-        });
+
+  console.log("fileID", fileID, "fileUploadPath", fileUploadPath);
+  
+  album.push({
+    photoURL: fileUploadPath,
+    photID: fileID,
+  });
 
 
   // if (images && images.length > 0) {
@@ -27,11 +30,7 @@ const createImageAlbum = async (images) => {
 
   //       console.log(album[0])
   //     }
-  //   }
-
-
-
-21
+  //   
 
   return album;
 

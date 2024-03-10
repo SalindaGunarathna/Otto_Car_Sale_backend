@@ -5,24 +5,24 @@ const createHttpError = require("http-errors");
 
 
 const sendEmail = async (emailAddress,Subject ,text)=>{
-    const email = emailAddress;
+    const recieverEmail = emailAddress;
     const body = text;
     const subject = Subject;
     const password = process.env.PASSWORD;
-    const Sendmail = process.env.EMAIL;
+    const SenderEmail = process.env.EMAIL;
     try {
 
       var transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: Sendmail,
+          user: SenderEmail,
           pass: password,
         },
       });
   
       var mailOptions = {
-        from: Sendmail,
-        to: "salindalakshan99@gmail.com",
+        from: SenderEmail,
+        to: recieverEmail,
         subject: subject,
         text: body,
       };

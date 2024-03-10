@@ -8,7 +8,7 @@ const Order = require('../controllers/orderController');
 
 
  router.post('/createOrder',Order.createOrder);
- router.put('/editOrder',Order.editOrder);
+ router.post('/editOrder/:id',Order.editOrder);
 
 // router.get('/retrieveAllOrders',Order.retrieveAllOrders);
 // router.get('/retrieveOneOrder/:orderID',Order.retrieveOneOrder);

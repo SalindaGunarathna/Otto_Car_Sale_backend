@@ -9,6 +9,7 @@ class EmailMessage {
         var order;
 
         this.order = order;
+        console.log(this.order)
 
     }
 
@@ -20,17 +21,24 @@ class EmailMessage {
         
         Thank you for your order! We're excited to let you know that your order has been successfully placed.
 
-        check the update status of your order
+       your order now status is: ${this.order.status}
         
         Order Details:
         - Order Number: ${this.order._id}
-        - Items: 
-        - Quantity: 
-        - Total Amount: ${this.order.totalPrice}
+
+        - Items:
+       
+        - Vehicle model: ${this.order.items[0].vehicleModel}
+        - Vehicle brand: ${this.order.items[0].vehicleBrand}
+        - Vehicle type: ${this.order.items[0].vehicleType}
+        - Vehicle color: ${this.order.items[0].vehicleColor}
+        - Vehicle price: ${this.order.items[0].vehiclePriceRange}
+        - Quantity: ${this.order.items[0].quantity}
+
+        - Customer name: ${this.order.customerName}
+        - Customer Email: ${this.order.customerEmail}
+        - Customer Mobile Number: ${this.order.customerMobileNumber}
         - Delivery Address: ${this.order.customerAddress}
-        - Billing Address: ${this.order.billingAddress}
-        - Order Date: ${this.order.orderedDate}
-        - Status: ${this.order.status}
         
         We will process your order as soon as possible. 
         
@@ -51,15 +59,28 @@ class EmailMessage {
 
         Dear sir,
         
-        You have received a new order!
+        You have received a new vehicle order!
+
+        order now status is: ${this.order.status}
         
         Order Details:
         - Order Number: ${this.order._id}
-        - Items: 
-        - Quantity: 
-        - Total Amount: ${this.order.totalPrice}
+
+        - Items:
+    
+        - Vehicle model: ${this.order.items[0].vehicleModel}
+        - Vehicle brand: ${this.order.items[0].vehicleBrand}
+        - Vehicle type: ${this.order.items[0].vehicleType}
+        - Vehicle color: ${this.order.items[0].vehicleColor}
+        - Vehicle price: ${this.order.items[0].vehiclePriceRange}
+
+        - Customer name: ${this.order.customerName}
+        - Customer Email: ${this.order.customerEmail}
+        - Customer Mobile Number: ${this.order.customerMobileNumber}
         - Delivery Address: ${this.order.customerAddress}
-        - Billing Address: ${this.order.billingAddress}
+
+
+        
         
         Please review the order details and proceed with processing it.
 

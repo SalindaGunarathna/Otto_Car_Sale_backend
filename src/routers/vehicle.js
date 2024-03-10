@@ -19,5 +19,7 @@ router.get("/retrieveAllVehicles/:token",Vehicle.retrieveAllVehicle)
 
 router.post("/editVehicle/",Vehicle.updateVehicle)
 
+router.post("/uploadImage/:vehicleID",Vehicle.uploadImage)  
 
-module.exports = router;
+
+module.exports = router;  

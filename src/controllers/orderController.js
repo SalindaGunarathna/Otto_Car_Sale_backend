@@ -13,14 +13,20 @@ const adminAuth = require('../middleware/adminMiddleware')
 
 exports.createOrder = async (req, res, next) => {
 
-    const customerName = req.body.customerName;
-    const customerEmail = req.body.customerEmail;
-    const VehicleID = req.body.VehicleID;
-    const vehicleName = req.body.vehicleName;
-    const vehiclePrice = req.body.vehiclePrice;
-    const quantity = req.body.quantity;
-    const customerAddress = req.body.customerAddress;
-    const billingAddress = req.body.billingAddress;
+    const {
+        customerName,
+        vehicleBrand,
+        vehicleModel,
+        vehiclePriceRange,
+        vehicleType,
+        vehicleColor,
+        quantity,
+        customerEmail,
+        customerAddress,
+        customerMobileNumber
+    } = req.body;
+
+
 
     var items = [];
 
@@ -36,33 +42,29 @@ exports.createOrder = async (req, res, next) => {
 
 
             items.push({
-                vehicleID: VehicleID,
-                vehicleName: vehicleName,
+                vehicleBrand: vehicleBrand,
+                vehicleModel: vehicleModel,
+                vehiclePriceRange: vehiclePriceRange,
+                vehicleType: vehicleType,
+                vehicleColor: vehicleColor,
                 quantity: quantity
-            })
+            });
 
             // herre calculate Totale Charge of order
-            const totalPrice = quantity * vehiclePrice;
-
-
-
-
-
 
             const order = await new Order({
                 customerName,
                 customerEmail,
+                customerMobileNumber,
                 quantity,
                 customerAddress,
-                billingAddress,
-                totalPrice,
                 items
             })
 
-            var result = order.save();
+            var result = await order.save();
 
-            const subject = "Octo care sale new order"
-            const EMAIL = process.env.PERSIONAL_EMAIL;
+            const subject = "Octo care sale new vehicle request"
+            const ownerEMAIL = "salinda.eng@gmail.com";
 
             const emailMessage = new EmailMessage(result);
 
@@ -70,12 +72,12 @@ exports.createOrder = async (req, res, next) => {
 
             // send email to owner
             const OwnerEmailBody = emailMessage.OwnerEmail();
-            await emailSend(EMAIL, subject, OwnerEmailBody);
+            await emailSend(ownerEMAIL, subject, OwnerEmailBody);
 
 
             // send email to customer
             const CustomerEmailBody = emailMessage.CustomerEmail();
-            await emailSend(customerEmail, subject, CustomerEmailBody);   
+            await emailSend(customerEmail, subject, CustomerEmailBody);
 
 
             res.send(result);
@@ -94,83 +96,50 @@ exports.createOrder = async (req, res, next) => {
 
 exports.editOrder = async (req, res, next) => {
 
-    const customerName = req.body.customerName;
-    const customerEmail = req.body.customerEmail;
-    const VehicleID = req.body.VehicleID;
-    const vehicleName = req.body.vehicleName;
-    const vehiclePrice = req.body.vehiclePrice;
-    const quantity = req.body.quantity;
-    const customerAddress = req.body.customerAddress;
-    const billingAddress = req.body.billingAddress;
-    const orderID = req.body.orderID;
-    const totalPrice = req.body.totalPrice;
-    const massage = req.body.chatBox;
-    const newStatus = req.body.status;
-    const id = req.body.id
-
+    const id = req.params.id;
+    const {
+        newStatus,
+        massage
+    } = req.body;
 
 
     try {
-        validateEditedData(req);
-        if (isvalidate) {
+        const order = await Order.findById(id);
+        const customerEmail = order.customerEmail
+
+        if (!order) {
+            throw createHttpError(404, "order not found");
+        } else {
+            if (order.status !== newStatus) {
+                order.status = newStatus
+
+            }
+            if (massage) {
+
+                console.log(massage)
+
+                order.chatBox.push({
+                    message: massage
+                });
+            }
 
 
-            const order = await Order.findById(id);
+            const updateorder = await order.save();
 
+            const subject = "Octo care sale ordder status updated"
 
-         
+            const emailMessage = new EmailMessage(updateorder);
+            // send email to customer
+            const CustomerEmailBody = emailMessage.CustomerEmail();
+            await emailSend(customerEmail, subject, CustomerEmailBody);
 
-                // adminAuth(req, res, next);
-                // if (adminAuth) {
-                //     // update status
-                //     if (newStatus != order.status) {
-                //     var status = newStatus;
-
-                //     }
-                //     // update massage
-                //     chatBox.push({
-                //         massage: massage
-                //     })
-
-
-
-                // }
-            
-
-
-            // update vehicle data 
-            const updateOrde = await Order.findByIdAndUpdate(id, { 
-                customerName,
-                customerEmail,
-                quantity,
-                customerAddress,
-                billingAddress,
-                totalPrice,
-                status,
-                chatBox,
-                vehicleName
-            });
-
-            if (updateOrde.status != newStatus) {
-
-                const subject = "Octo care sale order update"
-                
-                const emailMessage = new EmailMessage(result);
-
-                // send email to customer
-                const CustomerEmailBody = emailMessage.CustomerEmail();
-                await emailSend(customerEmail, subject, CustomerEmailBody);
-
-            }  
-
+            res.send(updateorder);
         }
 
-
     } catch (error) {
-
-        next();
-
+        throw createHttpError(400, error);
     }
+
 
 }
 

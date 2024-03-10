@@ -6,17 +6,32 @@ var ObjectId = require('mongoose').Types.ObjectId;
 
 const validateOrderData = (req) => {
 
-    const customerName = req.body.customerName;
-    const customerEmail = req.body.customerEmail;
-    const VehicleID = req.body.VehicleID;
-    const vehicleName = req.body.vehicleName;
-    const vehiclePrice = req.body.vehiclePrice;
-    const quantity = req.body.quantity;
-    const customerAddress = req.body.customerAddress;
-    const billingAddress = req.body.billingAddress;
+    const {
+        customerName,
+        vehicleBrand,
+        vehicleModel,
+        vehiclePriceRange,
+        vehicleType,
+        vehicleColor,
+        quantity,
+        customerEmail,
+        customerAddress,
+        customerMobileNumber
+    } = req.body;
 
-    if (!customerName || !quantity || !customerAddress || !billingAddress ||
-        !vehiclePrice || !vehicleName || !customerEmail || !VehicleID) {
+    if (
+        !customerName ||
+        !vehicleBrand ||
+        !vehicleModel ||
+        !vehiclePriceRange ||
+        !vehicleType ||
+        !vehicleColor ||
+        !quantity ||
+        !customerEmail ||
+        !customerAddress||
+        !customerMobileNumber
+
+    ) {
         throw createHttpError(400, "missing data");
     } else {
         return true
