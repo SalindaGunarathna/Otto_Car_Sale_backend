@@ -1,8 +1,12 @@
-
+const mongoose = require('mongoose');
 
 class EmailMessage {
 
+
+  
+
     constructor(order) {
+        var order;
 
         this.order = order;
 
@@ -12,7 +16,7 @@ class EmailMessage {
         return `
 
 
-        Dear ${oreder.customerName},
+        Dear ${this.order.customerName},
         
         Thank you for your order! We're excited to let you know that your order has been successfully placed.
 
@@ -20,8 +24,8 @@ class EmailMessage {
         
         Order Details:
         - Order Number: ${this.order._id}
-        - Items: ${this.order.items[0].vehicleName}
-        - Quantity: ${this.order.items[0].quantity}
+        - Items: 
+        - Quantity: 
         - Total Amount: ${this.order.totalPrice}
         - Delivery Address: ${this.order.customerAddress}
         - Billing Address: ${this.order.billingAddress}
@@ -51,8 +55,8 @@ class EmailMessage {
         
         Order Details:
         - Order Number: ${this.order._id}
-        - Items: ${this.order.items[0].vehicleName}
-        - Quantity: ${this.order.items[0].quantity}
+        - Items: 
+        - Quantity: 
         - Total Amount: ${this.order.totalPrice}
         - Delivery Address: ${this.order.customerAddress}
         - Billing Address: ${this.order.billingAddress}
@@ -75,3 +79,7 @@ class EmailMessage {
 
     }
 }
+
+
+
+module.exports = EmailMessage;

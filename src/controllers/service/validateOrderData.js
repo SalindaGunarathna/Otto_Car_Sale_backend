@@ -15,7 +15,7 @@ const validateOrderData = (req) => {
     const customerAddress = req.body.customerAddress;
     const billingAddress = req.body.billingAddress;
 
-    if (!customerName || !items || !quantity || !customerAddress || !billingAddress ||
+    if (!customerName || !quantity || !customerAddress || !billingAddress ||
         !vehiclePrice || !vehicleName || !customerEmail || !VehicleID) {
         throw createHttpError(400, "missing data");
     } else {

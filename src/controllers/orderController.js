@@ -2,8 +2,11 @@ const createHttpError = require("http-errors");
 const Order = require("../model/oreder");
 const { validateOrderData, validateEditedData } = require("../controllers/service/validateOrderData"); //orderValidate = require("../controllers/service/validateOrderData");
 require("dotenv").config();
-const EmailMessage = require("../model/emailMessage");
+//const EmailMessage = require("../model/emailMessage");
 const emailSend = require("./service/sendEmail");
+const EmailMessage = require('./service/massageGenarator');
+
+
 
 
 const adminAuth = require('../middleware/adminMiddleware')
@@ -19,10 +22,14 @@ exports.createOrder = async (req, res, next) => {
     const customerAddress = req.body.customerAddress;
     const billingAddress = req.body.billingAddress;
 
+    var items = [];
+
 
 
     try {
-        const isvalidate = orderValidate.validateOrderData(req);
+
+
+        const isvalidate = validateOrderData(req);
 
 
         if (isvalidate) {
@@ -68,7 +75,10 @@ exports.createOrder = async (req, res, next) => {
 
             // send email to customer
             const CustomerEmailBody = emailMessage.CustomerEmail();
-            await emailSend(customerEmail, subject, CustomerEmailBody);
+            await emailSend(customerEmail, subject, CustomerEmailBody);   
+
+
+            res.send(result);
 
 
 
@@ -151,7 +161,7 @@ exports.editOrder = async (req, res, next) => {
                 const CustomerEmailBody = emailMessage.CustomerEmail();
                 await emailSend(customerEmail, subject, CustomerEmailBody);
 
-            }
+            }  
 
         }
 

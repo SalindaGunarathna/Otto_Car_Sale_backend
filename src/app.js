@@ -18,10 +18,12 @@ app.use(cors());
 const Admin  = require('./routers/admin')  
 const Vehicle = require('./routers/vehicle'); 
 const customer = require('./routers/customer');
+const order = require('./routers/orders');
 
 app.use('/api/v1/',Admin);
 app.use('/api/v1/',Vehicle);
 app.use('/api/v1/customer/',customer);
+app.use('/api/v1/orders/',order);
 
   
 
