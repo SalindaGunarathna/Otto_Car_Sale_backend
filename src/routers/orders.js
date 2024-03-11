@@ -10,7 +10,11 @@ const Order = require('../controllers/orderController');
  router.post('/createOrder',Order.createOrder);
  router.post('/editOrder/:id',Order.editOrder);
 
-// router.get('/retrieveAllOrders',Order.retrieveAllOrders);
+ router.get('/retrieveAllOrders',Order.retrieveAll);
+router.get("/retrievCustomerOrders/:id",Order.retrievCustomerOrders)
+
+
+
 // router.get('/retrieveOneOrder/:orderID',Order.retrieveOneOrder);
 // router.delete('/deleteOrder/:orderID',Order.deleteOrder);
 

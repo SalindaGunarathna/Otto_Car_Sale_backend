@@ -18,6 +18,11 @@ const orderSchema = new mongoose.Schema({
     
     required: true,
   },
+  customerID: {
+    type:String,
+    
+    required: true,
+  },
   customerEmail: {
     type: String,
     required: true,

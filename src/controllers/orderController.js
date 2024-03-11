@@ -15,6 +15,7 @@ exports.createOrder = async (req, res, next) => {
 
     const {
         customerName,
+        customerID,
         vehicleBrand,
         vehicleModel,
         vehiclePriceRange,
@@ -55,6 +56,7 @@ exports.createOrder = async (req, res, next) => {
             const order = await new Order({
                 customerName,
                 customerEmail,
+                customerID,
                 customerMobileNumber,
                 quantity,
                 customerAddress,
@@ -143,3 +145,29 @@ exports.editOrder = async (req, res, next) => {
 
 }
 
+
+
+exports.retrieveAll = async(req,res,next)=>{
+    try {
+
+        const allorder  = await Order.find({})
+        res.send(allorder)
+        
+    } catch (error) {
+        
+        throw createHttpError(400,error)
+    }
+}
+
+
+exports.retrievCustomerOrders = async(req,res,next)=>{
+    try {
+        const customerID = req.params.id
+        const order  = await Order.find({customerID:customerID})
+        res.send(order)
+        
+    } catch (error) {
+        
+        throw createHttpError(400,error)
+    }
+}
