@@ -15,7 +15,7 @@ router.post("/similarVehicles",Vehicle.smilerTypeVehicle)
 
 router.get("/findOneVehicle/:vehicleID",Vehicle.findOneVehicle)
 
-router.get("/retrieveAllVehicles/:token",Vehicle.retrieveAllVehicle)
+router.get("/retrieveAllVehicles",Vehicle.retrieveAllVehicle)
 
 router.post("/editVehicle/",Vehicle.updateVehicle)
 

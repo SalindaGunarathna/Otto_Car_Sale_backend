@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const VehicleSchema = new Schema({
     vehicleId: { type: String, required:false, unique:false, maxlenght: 50 },
-    vehiclePrice: { type: String, required:false, unique:false, maxlenght: 50 },
+    vehiclePrice: { type: String, required:false, maxlenght: 50 },
 
     chassisNumber: { type: String, required:false, maxlength: 50 }, 
     // Chassis number for reference
@@ -51,7 +51,7 @@ const VehicleSchema = new Schema({
     album: [{
 
         photoURL: { type: String },
-        photID: { type: String }
+       //  photID: { type: String }
 
     }],
 });

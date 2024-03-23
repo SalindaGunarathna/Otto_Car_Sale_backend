@@ -15,34 +15,39 @@ const orderSchema = new mongoose.Schema({
   },
   customerName: {
     type:String,
-    
+    maxlength: 100,
     required: true,
   },
   customerID: {
     type:String,
-    
+    maxlength: 100,
     required: true,
   },
   customerEmail: {
     type: String,
+    maxlength: 100,
     required: true,
   },
   customerMobileNumber: {
     type: String,
+    maxlength: 100,
     required: true,
     
   },
   items: [{
     vehicleBrand: {
       type: String,
+      maxlength: 100,
       required: true,
     },
     vehicleModel: {
       type: String,
+      maxlength: 100,
       required: true,
     },
     vehiclePriceRange: {
       type: Number,
+      maxlength: 100,
       required: true,
     },
     vehicleType: {
@@ -50,12 +55,13 @@ const orderSchema = new mongoose.Schema({
     },
     vehicleColor: {
       type: String,
+      maxlength: 100,
       
     },
     quantity: {
       type: Number,
       required: true,
-      min: 1,
+      min: 1,maxlength: 15,
     },
   }],
   status: {
@@ -67,6 +73,7 @@ const orderSchema = new mongoose.Schema({
   customerAddress: {
     type: String,
     required: true,
+    maxlength: 100,
   },
   chatBox: [{
     message: { type: String },

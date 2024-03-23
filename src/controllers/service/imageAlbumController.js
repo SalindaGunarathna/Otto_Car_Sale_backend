@@ -10,13 +10,13 @@ const createImageAlbum = async (images) => {
   var album = [];
 
   var picture = images
-  const { fileID, fileUploadPath } = await uploadImageToDrive(images);
+  const { filepath } = await uploadImageToDrive(images);
 
-  console.log("fileID", fileID, "fileUploadPath", fileUploadPath);
+  //console.log("fileID", fileID, "fileUploadPath", fileUploadPath);
   
   album.push({
-    photoURL: fileUploadPath,
-    photID: fileID,
+    photoURL: filepath,
+    // photID: fileID,
   });
 
 
@@ -40,8 +40,8 @@ const createImageAlbum = async (images) => {
 const deleteAlbum = async (album) => {
   const images = album;
   for (const image of images) {
-    const file_id = image.photID;
-    const deleteStatus = await deleteFile(file_id);
+    const file_url = image.photoURL;
+    const deleteStatus = await deleteFile(file_url);
 
     if (deleteStatus !== 204) {
       throw createHttpError(400, "unable to delete image from drive");

@@ -62,7 +62,7 @@ const uploadImageToDrive = async (file) => {
     file.mv(filepath); // save file local location
 
     console.log(filepath);
-
+    /*
     // call the authenticateAPI function for google API Authentication
     const drive = await authenticateAPI();
 
@@ -120,26 +120,39 @@ const uploadImageToDrive = async (file) => {
     });
     console.log(fileID)
 
-    return { fileID, fileUploadPath };  
+    */
+
+    return { filepath };  
   } catch (error) {
     console.log(error)
   }
 };
 
 // delete file
-const deleteFile = async (file_Id) => {
-  const drive = await authenticateAPI();
-  try {
-    const response = await drive.files.delete({
-      fileId: file_Id,
-    });
+const deleteFile = async (filepath) => {
+ // const drive = await authenticateAPI();
 
-    console.log(`delete success full ${response.status}`);
 
-    return response.status;
-  } catch (error) {
-    res.send(error);
+ fs.unlink(filepath, (err) => {
+  if (err) {
+    console.error("Unable to delete local image file:", err);
+  } else {
+    console.log("Local image file deleted successfully.");
   }
+});
+
+
+  // try {
+  //   const response = await drive.files.delete({
+  //     fileId: file_Id,
+  //   });
+
+  //   console.log(`delete success full ${response.status}`);
+
+  //   return response.status;
+  // } catch (error) {
+  //   res.send(error);
+  // }
 };
 
 module.exports = {
