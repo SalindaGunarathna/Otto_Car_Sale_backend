@@ -64,7 +64,7 @@ const AdminSchema = new Schema({
     validate: [passwordValidator]
   },
   profile: { type: String },
-  profileID: { type: String },
+
   tokens: [{
     token: String
   }] 

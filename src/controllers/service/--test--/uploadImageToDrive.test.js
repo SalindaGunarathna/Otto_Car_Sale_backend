@@ -5,7 +5,7 @@ describe('uploadImageToDrive', () => {
     const file = { mimetype: 'image/jpeg', name: 'test.jpg' };
     const result = await uploadImageToDrive(file);
     expect(result.filepath).toBeDefined();
-    // Add more assertions if needed
+    
   });
 
   it('should throw an error if file type is not an image', async () => {

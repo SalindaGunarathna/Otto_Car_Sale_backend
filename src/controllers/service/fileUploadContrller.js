@@ -40,7 +40,7 @@ const uploadImageToDrive = async (file) => {
     console.log(filepath);
    
 
-    return { filepath };  
+    return {filepath};  
   } catch (error) {
     console.log(error)
   }

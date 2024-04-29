@@ -92,7 +92,7 @@ UserShema.pre("save", async function (next) {
   next();
 })
 
-userShema.statics.findByCredentials = async (email, password) => {
+UserShema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
 
   console.log(user)
@@ -114,7 +114,7 @@ userShema.statics.findByCredentials = async (email, password) => {
   return User;
 };
 
-userShema.methods.generateAuthToken = async function () {
+UserShema.methods.generateAuthToken = async function () {
   const user = this;
   const token =  jwt.sign({_id : user._id.toString()},SECRET_KEY)
    user.tokens = user.tokens.concat({token})

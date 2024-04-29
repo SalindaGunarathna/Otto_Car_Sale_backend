@@ -111,18 +111,17 @@ exports.create = async (req, res, next) => {
     }
     const { profile } = req.files;
 
-    const { fileID, fileUploadPath } = await uploadImageToDrive(profile);
+    const { filepath } = await uploadImageToDrive(profile);
 
-    console.log(fileUploadPath);
+    console.log(filepath);
     // set profile Url  path to store in data base
     // create new admin
-    const admin = new Admin({
+    const admin = new Admin({  
       firstName,
       email,
       password,
       lastName,
-      profile: fileUploadPath,
-      profileID: fileID,
+      profile:filepath,
     });
 
     const result = await admin.save();
