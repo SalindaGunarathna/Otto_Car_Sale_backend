@@ -20,9 +20,12 @@ const {
 const emailSend = require("./service/sendEmail");
 const { config } = require("dotenv");
 
+
+
 exports.login = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
+  const role = req.body.role
   try {
     if (!email || !password) {
       throw createHttpError(400, "missing email or password");
@@ -35,8 +38,10 @@ exports.login = async (req, res, next) => {
     } catch (error) {
       throw createHttpError(400, "user not found ");
     }
+ 
 
-    const token = await User.generateAuthToken();
+    const token = await user.generateAuthToken();
+
     res.send({ user, token });
   } catch (error) {
     next(error);
@@ -104,7 +109,40 @@ exports.resetPassword = async (req, res, next) => {
 };
 
 //Crete new user  Controller function
-exports.create = async (req, res, next) => {
+exports.adminRegistration = async (req, res, next) => {
+  const { firstName, email, password,lastName,role } = req.body;
+  try {
+    if (!firstName || !email || !password) {
+      throw createHttpError(400, "please provide all required information");
+    }
+    const { profile } = req.files;// load the image from req.files
+
+    // call the uploadImageToDrive function for uploading image to google drive
+    const { filepath } = await uploadImageToDrive(profile);
+
+    
+    // set profile Url  path to store in data base
+    // create new user
+    const user = new User({
+      firstName,
+      email,
+      password,
+      lastName,
+      profile: filepath,
+      role:role
+      
+    });
+
+    const result = await user.save();
+    res.status(201).send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+exports.customerRegistration = async (req, res, next) => {
   const { firstName, email, password,lastName,role } = req.body;
   try {
     if (!firstName || !email || !password) {

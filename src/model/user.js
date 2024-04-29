@@ -111,11 +111,14 @@ UserShema.statics.findByCredentials = async (email, password) => {
     throw new Error('Unable to login. Incorrect password.');
   }
 
-  return User;
+  return user;
 };
 
 UserShema.methods.generateAuthToken = async function () {
   const user = this;
+  console.log(user._id)
+
+
   const token =  jwt.sign({_id : user._id.toString()},SECRET_KEY)
    user.tokens = user.tokens.concat({token})
    await user.save()
@@ -128,5 +131,5 @@ UserShema.methods.generateAuthToken = async function () {
 
 
 
-const User = mongoose.model('Users', UserShema);
+const User = mongoose.model('User', UserShema);
 module.exports = User;
