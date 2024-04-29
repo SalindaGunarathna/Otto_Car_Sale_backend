@@ -29,7 +29,7 @@ const passwordValidator = {
 
  
 
-const CustomerShema = new Schema({
+const UserShema = new Schema({
   firstName: {
     type: String,
     required: true,
@@ -68,35 +68,42 @@ const CustomerShema = new Schema({
 
   profileID: { type: String },
 
+  role :{
+    type:String,
+    enum:["Admin","Customer"],
+    required:true,
+
+  },
+
   tokens: [{
     token: String
   }] 
 });
 
 
-CustomerShema.pre("save", async function (next) {
-  const customer = this;
-  if (customer.isModified("password")) {
-    customer.password = await bcrypt.hash(customer.password, 12)
+UserShema.pre("save", async function (next) {
+  const user = this;
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 12)
   }
-  if (!customer.tokens || !Array.isArray(customer.tokens)) {
-    customer.tokens = [];
+  if (!user.tokens || !Array.isArray(user.tokens)) {
+    user.tokens = [];
   } 
   next();
 })
 
-CustomerShema.statics.findByCredentials = async (email, password) => {
-  const customer = await Customer.findOne({ email });
+userShema.statics.findByCredentials = async (email, password) => {
+  const user = await User.findOne({ email });
 
-  console.log(customer)
+  console.log(user)
   console.log(password)
-  console.log(customer.password)   
+  console.log(user.password)   
 
-  if (!customer) {
+  if (!user) {
     throw new Error('Unable to login. User not found.');
   }
 
-  const isMatch = await bcrypt.compare(password, customer.password)
+  const isMatch = await bcrypt.compare(password, user.password)
 
   console.log(isMatch)
 
@@ -104,16 +111,16 @@ CustomerShema.statics.findByCredentials = async (email, password) => {
     throw new Error('Unable to login. Incorrect password.');
   }
 
-  return customer;
+  return User;
 };
 
-CustomerShema.methods.generateAuthToken = async function () {
-  const customer = this;
-  const token =  jwt.sign({_id : customer._id.toString()},SECRET_KEY)
-   customer.tokens = customer.tokens.concat({token})
-   await customer.save()
+userShema.methods.generateAuthToken = async function () {
+  const user = this;
+  const token =  jwt.sign({_id : user._id.toString()},SECRET_KEY)
+   user.tokens = user.tokens.concat({token})
+   await user.save()
 
-   console.log("customer.tokens")
+   console.log("user.tokens")
 
    return  token;   
 
@@ -121,5 +128,5 @@ CustomerShema.methods.generateAuthToken = async function () {
 
 
 
-const Customer = mongoose.model('Customers', CustomerShema);
-module.exports = Customer;
+const User = mongoose.model('Users', UserShema);
+module.exports = User;
