@@ -2,7 +2,7 @@ const createHttpError = require("http-errors");
 const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
 require("dotenv").config();
-const Customer = require("../model/customer");
+const User = require("../model/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const path = require("path");
@@ -28,16 +28,16 @@ exports.login = async (req, res, next) => {
       throw createHttpError(400, "missing email or password");
     }
     try {
-      var customer = await Customer.findByCredentials(
+      var user = await User.findByCredentials(
         req.body.email,
         req.body.password
       );
     } catch (error) {
-      throw createHttpError(400, "Customer not found ");
+      throw createHttpError(400, "user not found ");
     }
 
-    const token = await customer.generateAuthToken();
-    res.send({ customer, token });
+    const token = await User.generateAuthToken();
+    res.send({ user, token });
   } catch (error) {
     next(error);
   }
@@ -51,15 +51,15 @@ exports.forgotPassword = async (req, res, next) => {
 
 
   try {
-    const customer = await Customer.findOne({ email: email }); 
-    var userId = customer._id;
-    var username = customer.firstName
+    const user = await User.findOne({ email: email }); 
+    var userId = user._id;
+    var username = user.firstName
     ;
-    if (!customer) {
-      throw createHttpError(400, "missing customer ");
+    if (!user) {
+      throw createHttpError(400, "missing user ");
     }
     // define requres massage cotext for email
-    const token = await customer.generateAuthToken();
+    const token = await user.generateAuthToken();
     const subject = "Octo Care sale System Reset password"
     const text = ` 
     Deare ${username}
@@ -93,7 +93,7 @@ exports.resetPassword = async (req, res, next) => {
   if (verify) {
     hasspasword = await bcrypt.hash(newPassword, 12);
 
-    const user = await Customer.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
       { _id: id },
       { password: hasspasword }
     );
@@ -103,9 +103,9 @@ exports.resetPassword = async (req, res, next) => {
   }
 };
 
-//Crete new Customer  Controller function
+//Crete new user  Controller function
 exports.create = async (req, res, next) => {
-  const { firstName, email, password,lastName } = req.body;
+  const { firstName, email, password,lastName,role } = req.body;
   try {
     if (!firstName || !email || !password) {
       throw createHttpError(400, "please provide all required information");
@@ -113,21 +113,22 @@ exports.create = async (req, res, next) => {
     const { profile } = req.files;// load the image from req.files
 
     // call the uploadImageToDrive function for uploading image to google drive
-    const { fileID, fileUploadPath } = await uploadImageToDrive(profile);
+    const { filepath } = await uploadImageToDrive(profile);
 
     
     // set profile Url  path to store in data base
-    // create new customer
-    const customer = new Customer({
+    // create new user
+    const user = new User({
       firstName,
       email,
       password,
       lastName,
-      profile: fileUploadPath,
-      profileID: fileID,
+      profile: filepath,
+      role:role
+      
     });
 
-    const result = await customer.save();
+    const result = await user.save();
     res.status(201).send(result);
   } catch (error) {
     next(error);

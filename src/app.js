@@ -17,12 +17,12 @@ app.use(fileUpload());
 app.use(cors());
 const Admin  = require('./routers/admin')  
 const Vehicle = require('./routers/vehicle'); 
-const customer = require('./routers/customer');
+const user = require('./routers/user');
 const order = require('./routers/orders');
 
 app.use('/api/v1/admin',Admin);
 app.use('/api/v1/vehicles',Vehicle);
-app.use('/api/v1/customer/',customer);
+app.use('/api/v1/user/',user);
 app.use('/api/v1/orders/',order);
 
   
