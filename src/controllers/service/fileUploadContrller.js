@@ -1,5 +1,5 @@
 const createHttpError = require("http-errors");
-
+const { v4: uuidv4 } = require('uuid');
 const mongoose = require("mongoose");
 require("dotenv").config();
 const Admin = require("../../model/admin");
@@ -20,7 +20,6 @@ const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
 
 // upload file
 const uploadImageToDrive = async (file) => {
-
   console.log("step 1");
   try {
     if (!file) {
@@ -32,15 +31,21 @@ const uploadImageToDrive = async (file) => {
 
     console.log("step 2");
 
-    // set the local file path
-    let filepath = __dirname + "../../../../public/file/" + file.name;
+    // Generate a unique identifier (UUID)
+    const uniqueId = uuidv4();
+    // Extract file extension
+    const fileExtension = file.name.split('.').pop();
+    // Construct a unique filename by appending the uniqueId and file extension
+    const uniqueFilename = `${uniqueId}.${fileExtension}`;
 
-    file.mv(filepath); // save file local location
+    // Set the local file path with the unique filename
+    let filepath = __dirname + "../../../../public/file/" + uniqueFilename;
+
+    file.mv(filepath); // save file to local location
 
     console.log(filepath);
-   
 
-    return {filepath};  
+    return { filepath };
   } catch (error) {
     console.log(error)
   }
