@@ -11,7 +11,7 @@ const Order = require('../controllers/orderController');
  router.post('/editOrder/:id',Order.editOrder);
 
  router.get('/retrieveAllOrders',Order.retrieveAll);
-router.get("/retrievCustomerOrders/:id",adminAuth,Order.retrievCustomerOrders)
+router.get("/retrievCustomerOrders/:id",Order.retrievCustomerOrders)
 
 
 
