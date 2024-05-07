@@ -110,9 +110,13 @@ exports.resetPassword = async (req, res, next) => {
 
 //Crete new user  Controller function
 exports.adminRegistration = async (req, res, next) => {
-  const { firstName, email, password,lastName, } = req.body;
+  const { firstName, email, password,lastName,SECRET_KEY } = req.body;
+
   const role = "Admin"
   try {
+    if (SECRET_KEY !== process.env.SECRET_KEY) {
+      throw createHttpError(400, "You have no permission");
+    }
     if (!firstName || !email || !password) {
       throw createHttpError(400, "please provide all required information");
     }
