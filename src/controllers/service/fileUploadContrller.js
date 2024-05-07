@@ -67,7 +67,7 @@ const deleteFile = async (filepath) => {
 
   //   console.log(`delete success full ${response.status}`);
 
-  //   return response.status;
+    return  204;
   // } catch (error) {
   //   res.send(error);
   // }

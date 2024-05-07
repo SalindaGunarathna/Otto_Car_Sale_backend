@@ -176,3 +176,17 @@ exports.customerRegistration = async (req, res, next) => {
     next(error);
   }
 };
+
+// logout user
+exports.logout = async (req, res, next) => {
+  try {
+    req.user.tokens = []; // Clearing all tokens
+    const user = await req.user.save();
+
+    res.send("Successfully logged out");
+  } catch (error) {
+    next(error);
+  }
+};
+
+

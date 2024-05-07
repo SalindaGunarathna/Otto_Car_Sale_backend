@@ -119,7 +119,7 @@ UserShema.methods.generateAuthToken = async function () {
   console.log(user._id)
 
 
-  const token =  jwt.sign({_id : user._id.toString()},SECRET_KEY)
+  const token =  jwt.sign({_id : user._id.toString()},SECRET_KEY,{ expiresIn: '1h' })
    user.tokens = user.tokens.concat({token})
    await user.save()
 
