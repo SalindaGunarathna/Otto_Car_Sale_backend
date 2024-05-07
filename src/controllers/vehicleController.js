@@ -97,8 +97,9 @@ exports.addvehicle = async (req, res, next) => {
 //remove vehicle
 exports.deleteVehicle = async (req, res, next) => {
   const vehicleID = req.params.vehicleID;
+  
   try {
-    const vehicle = await Vehicle.findOneAndDelete({ vehicleId: vehicleID });
+    const vehicle = await Vehicle.findOneAndDelete({ _id: vehicleID });
 
     if (!vehicle) {
       throw createHttpError(404, "vehicle not found ");

@@ -171,3 +171,30 @@ exports.retrievCustomerOrders = async(req,res,next)=>{
         throw createHttpError(400,error)
     }
 }
+
+// delete order
+exports.deleteOrder = async(req,res,next)=>{
+    const id = req.params.id
+
+    try {
+        const order = await Order.findByIdAndDelete(id)
+    res.send("Successfully  Order deleted")
+    } catch (error) {
+
+       next(error)
+        
+    }
+    
+}
+
+// retrieve one order
+exports.retrieveOneOrder = async(req,res,next)=>{
+    const id = req.params.id
+    try {
+        const order = await Order.findById(id)
+        
+        res.send(order)
+    } catch (error) {
+        next(error)
+    }
+}
