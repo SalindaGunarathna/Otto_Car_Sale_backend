@@ -5,9 +5,9 @@ const adminAuth  = require('../middleware/adminMiddleware')
 const Vehicle =  require('../controllers/vehicleController');
 
 
-router.post("/addVehicle", Vehicle.addvehicle);
+router.post("/addVehicle",adminAuth, Vehicle.addvehicle);
 
-router.delete("/deleteVehi/:vehicleID",Vehicle.deleteVehicle)
+router.delete("/deleteVehi/:vehicleID",adminAuth,Vehicle.deleteVehicle)
 
 router.post("/retrieveVehicles/:token",Vehicle.retrieveVehicle) //retrieve vehicles by filtering to customer by serching
 
@@ -17,9 +17,9 @@ router.get("/findOneVehicle/:vehicleID",Vehicle.findOneVehicle)
 
 router.get("/retrieveAllVehicles",Vehicle.retrieveAllVehicle)
 
-router.post("/editVehicle/",Vehicle.updateVehicle)
+router.post("/editVehicle/",adminAuth,Vehicle.updateVehicle)
 
-router.post("/uploadImage/:vehicleID",Vehicle.uploadImage)  
+router.post("/uploadImage/:vehicleID",adminAuth,Vehicle.uploadImage)  
 
 
 module.exports = router;  

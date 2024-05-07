@@ -110,7 +110,8 @@ exports.resetPassword = async (req, res, next) => {
 
 //Crete new user  Controller function
 exports.adminRegistration = async (req, res, next) => {
-  const { firstName, email, password,lastName,role } = req.body;
+  const { firstName, email, password,lastName, } = req.body;
+  const role = "Admin"
   try {
     if (!firstName || !email || !password) {
       throw createHttpError(400, "please provide all required information");
@@ -143,7 +144,10 @@ exports.adminRegistration = async (req, res, next) => {
 
 
 exports.customerRegistration = async (req, res, next) => {
-  const { firstName, email, password,lastName,role } = req.body;
+  const { firstName, email, password,lastName } = req.body;
+  const role = "Customer"
+
+  
   try {
     if (!firstName || !email || !password) {
       throw createHttpError(400, "please provide all required information");
