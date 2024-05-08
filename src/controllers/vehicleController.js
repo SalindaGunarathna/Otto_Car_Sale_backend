@@ -251,7 +251,7 @@ exports.retrieveVehicle = async (req, res, next) => {
     const { vehicleType, brand, model, style, fuelType, manufacturedYear } =
       req.body;
 
-  const token = req.params.token;
+ // const token = req.params.token;
   console.log(req.body);
 
   try {

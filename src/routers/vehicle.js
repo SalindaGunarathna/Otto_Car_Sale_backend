@@ -17,7 +17,7 @@ router.get("/findOneVehicle/:vehicleID",Vehicle.findOneVehicle)
 
 router.get("/retrieveAllVehicles",Vehicle.retrieveAllVehicle)
 
-router.post("/editVehicle/",adminAuth,Vehicle.updateVehicle)
+router.put("/editVehicle/",adminAuth,Vehicle.updateVehicle)
 
 router.post("/uploadImage/:vehicleID",adminAuth,Vehicle.uploadImage)  
 
