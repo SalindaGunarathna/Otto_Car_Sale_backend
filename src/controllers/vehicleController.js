@@ -96,10 +96,10 @@ exports.addvehicle = async (req, res, next) => {
 
 //remove vehicle
 exports.deleteVehicle = async (req, res, next) => {
-  const vehicleID = req.params.vehicleID;
+  const id= req.params.id;
   
   try {
-    const vehicle = await Vehicle.findOneAndDelete({ _id: vehicleID });
+    const vehicle = await Vehicle.findOneAndDelete({ _id: id });
 
     if (!vehicle) {
       throw createHttpError(404, "vehicle not found ");
@@ -116,6 +116,8 @@ exports.deleteVehicle = async (req, res, next) => {
 
 // update vehicle
 exports.updateVehicle = async (req, res, next) => {
+
+  const id = req.params.id;
   const {
     vehicleId,
     chassisNumber,
@@ -140,12 +142,11 @@ exports.updateVehicle = async (req, res, next) => {
   var album = [];
 
   try {
-    const oldVehicle = await Vehicle.findOne({ vehicleId: vehicleId });
+    const oldVehicle = await Vehicle.findOne({ _id: id });
 
     if (!oldVehicle) {
       throw createHttpError(404, "vehicle not Found ");
     } else {
-
 
       const { images } = req.files;
       // since this is update no need to validate
@@ -234,10 +235,10 @@ exports.smilerTypeVehicle = async (req, res, next) => {
 // retrieve one Vehicle by searching
 
 exports.findOneVehicle = async (req, res, next) => {
-  const vehicle_ID = req.params.vehicleID;
+  const id = req.params.id;
 
   try {
-    const selectedVehicle = await Vehicle.find({ vehicleId: vehicle_ID });
+    const selectedVehicle = await Vehicle.find({ _id: id });
 
     res.send(selectedVehicle);  
   } catch (error) {
@@ -338,13 +339,13 @@ exports.retrieveAllVehicle = async (req, res, next) => {
 
 // upload new image
 exports.uploadImage = async (req, res, next) => {
-  const vehicleId = req.params.vehicleID;
+  const id = req.params.id;
 
   const {image} = req.files;
 
   if (image) {
     try {
-      const vehicle = await Vehicle.findOne({ vehicleId: vehicleId });
+      const vehicle = await Vehicle.findOne({ _id: id });
 
 
       if (vehicle) {
