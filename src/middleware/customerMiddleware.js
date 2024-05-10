@@ -5,24 +5,35 @@ require('dotenv').config();
 
 const SECRET_KEY = process.env.SECRET_KEY
 
-const adminAuth = async (req, res, next) => {
+const customerAuth = async (req, res, next) => {
     try {
 
         const token = req.header('Authorization').replace('Bearer ', "")
         const decode = jwt.verify(token, SECRET_KEY)
 
+        const id = req.params.id
+
+        console.log(decode)
+
         const user = await User.findOne(
             {
-                _id: decode._id,
-                "tokens.token": token,
+                _id:decode._id,
+                 "tokens.token": token,
+                
             }
         )
 
-        if (user.role !== "Customer" || !user) {
-            throw createHttpError("this user have no permission", 401)
+
+        if (decode.role !== "Customer" || !user||decode._id !== id) {
+          
+            throw createHttpError("this user have no permission")
         }
+       
+
+
         req.token = token
         req.user = user
+
 
         
 
@@ -35,4 +46,4 @@ const adminAuth = async (req, res, next) => {
 }
 
 
-module.exports = adminAuth
+module.exports = customerAuth

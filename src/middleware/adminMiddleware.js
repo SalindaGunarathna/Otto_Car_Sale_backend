@@ -18,7 +18,7 @@ const adminAuth = async (req, res, next) => {
             }
         )
 
-        if (user.role !== "Admin" || !user) {
+        if (user.role !== "Admin" || !user||decode._id !== user._id) {
             throw createHttpError("this user have no permission", 401)
         }
         req.token = token
