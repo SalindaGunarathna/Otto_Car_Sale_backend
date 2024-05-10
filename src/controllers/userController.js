@@ -89,21 +89,23 @@ exports.forgotPassword = async (req, res, next) => {
 
 exports.resetPassword = async (req, res, next) => {
   const { id, token } = req.params;
-  const newPassword = req.body.password;
+  const newPassword = req.body.newPassword;  
 
   const SECRET_KEY = process.env.SECRET_KEY;
 
   const verify = jwt.verify(token, SECRET_KEY);
 
   if (verify) {
-    hasspasword = await bcrypt.hash(newPassword, 12);
+     
+    hasspasword = await bcrypt.hash(newPassword, 12)
+   
 
-    const user = await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(  
       { _id: id },
-      { password: hasspasword }
+      { password: hasspasword }  
     );
 
-    console.log(user);
+    // console.log(user);
     res.send("success");
   }
 };
