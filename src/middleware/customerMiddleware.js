@@ -11,7 +11,7 @@ const customerAuth = async (req, res, next) => {
         const token = req.header('Authorization').replace('Bearer ', "")
         const decode = jwt.verify(token, SECRET_KEY)
 
-        const id = req.params.id
+       // const id = req.params.id
 
         console.log(decode)
 
@@ -24,10 +24,15 @@ const customerAuth = async (req, res, next) => {
         )
 
 
-        if (decode.role !== "Customer" || !user||decode._id !== id) {
+        if (decode.role !== "Customer" || !user) {  
           
             throw createHttpError("this user have no permission")
         }
+        const isValidToken = user.tokens.some(userToken => userToken.token === token);
+        if (!isValidToken) {
+            throw createHttpError("Unauthorized - Invalid token");
+        }
+
        
 
 

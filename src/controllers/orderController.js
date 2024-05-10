@@ -162,7 +162,7 @@ exports.retrieveAll = async(req,res,next)=>{
 
 exports.retrievCustomerOrders = async(req,res,next)=>{
     try {
-        const customerID = req.params.id
+        const customerID = req.user._id
         const order  = await Order.find({customerID:customerID})
         res.send(order)
         

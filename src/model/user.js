@@ -64,8 +64,9 @@ const UserShema = new Schema({
     validate: [passwordValidator]
   },
   profile: { type: String },
-  orders :[{ type: String}],
-
+ 
+  address: { type: String },
+  phoneNO: { type: Number },
   profileID: { type: String },
 
   role :{

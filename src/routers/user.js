@@ -14,6 +14,10 @@ router.post('/forgot',User.forgotPassword);
 router.post('/reset/:id/:token',User.resetPassword);
 router.post("/adminlogout",adminAuth,User.logout);
 router.post("/customerlogout",customerAuth,User.logout);
+router.post("/updateuseraccountadmin",adminAuth,User.updateUserAccount);
+router.post("/updateuseraccountcustomer",customerAuth,User.updateUserAccount);
+router.get("/adminprofile",adminAuth,User.userProfile);
+router.get("/customerprofile",customerAuth,User.userProfile);
 
 
 

@@ -148,14 +148,16 @@ exports.updateVehicle = async (req, res, next) => {
       throw createHttpError(404, "vehicle not Found ");
     } else {
 
-      const { images } = req.files;
+      console.log(req.files);
+      album = oldVehicle.album;
       // since this is update no need to validate
       // await validateVehicleData(req.body);
 
-      if (images) {
-        const NewAlbum = await createImageAlbum(images);
+      if (req.files !==null) {
 
-        album = oldVehicle.album;
+        const { images } = req.files;
+        console.log("image found");
+        const NewAlbum = await createImageAlbum(images);     
 
         if (NewAlbum) {
           console.log(NewAlbum[0].photoURL);
@@ -164,8 +166,6 @@ exports.updateVehicle = async (req, res, next) => {
             photoURL: NewAlbum[0].photoURL,
             ///photID: NewAlbum[0].photID,
           });
-
-
           // for (const image of NewAlbum) {
 
           //   console.log(image.fileUploadPath, image.fileID);

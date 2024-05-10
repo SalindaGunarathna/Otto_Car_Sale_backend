@@ -112,7 +112,7 @@ exports.resetPassword = async (req, res, next) => {
 
 //Crete new user  Controller function
 exports.adminRegistration = async (req, res, next) => {
-  const { firstName, email, password,lastName,SECRET_KEY } = req.body;
+  const { firstName, email, password,lastName,phoneNO,address,SECRET_KEY } = req.body;
 
   const role = "Admin"
   try {
@@ -136,7 +136,9 @@ exports.adminRegistration = async (req, res, next) => {
       password,
       lastName,
       profile: filepath,
-      role:role
+      role:role,
+      phoneNO
+      ,address
       
     });
 
@@ -150,7 +152,7 @@ exports.adminRegistration = async (req, res, next) => {
 
 
 exports.customerRegistration = async (req, res, next) => {
-  const { firstName, email, password,lastName } = req.body;
+  const { firstName, email, password,lastName ,phoneNO,address} = req.body;
   const role = "Customer"
 
   
@@ -173,6 +175,8 @@ exports.customerRegistration = async (req, res, next) => {
       lastName,
       profile: filepath,
       role:role
+      ,phoneNO
+      ,address
       
     });
 
@@ -190,6 +194,47 @@ exports.logout = async (req, res, next) => {
     const user = await req.user.save();
 
     res.send("Successfully logged out");
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updateUserAccount = async (req, res, next) => {
+  const id = req.user._id; 
+   const { firstName, email,lastName ,phoneNO,address} = req.body;
+
+  try {
+    const user = await User.findById(id);
+    if (!user) {  
+      throw createHttpError(404, "User not found");
+    }
+    const { profile } = req.files;  
+    if (profile) {
+      // call the uploadImageToDrive function for uploading image to google drive
+      const { filepath } = await uploadImageToDrive(profile);
+      user.profile = filepath;
+    } 
+
+    user.firstName = firstName;
+    user.email = email;
+    user.lastName = lastName;
+    user.phoneNO = phoneNO;
+    user.address = address;
+    const result = await user.save(); 
+    res.send(result); 
+  } catch (error) {
+    next(error);
+  } 
+};
+
+exports.userProfile = async (req, res, next) => {
+  const id = req.user._id;
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      throw createHttpError(404, "User not found");
+    }
+    res.send(user);
   } catch (error) {
     next(error);
   }
