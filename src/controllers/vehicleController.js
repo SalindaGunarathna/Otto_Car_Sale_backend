@@ -213,7 +213,6 @@ exports.updateVehicle = async (req, res, next) => {
 };
 
 // Suggest vehicle
-
 exports.smilerTypeVehicle = async (req, res, next) => {
   const fuelType = req.body.fuelType;
   const vehicleType = req.body.vehicleType;

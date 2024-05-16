@@ -75,7 +75,7 @@ exports.forgotPassword = async (req, res, next) => {
     do not shear this link 
     
     thak you 
-    Octo care sale `
+    OTTO care sale `
 
      // call send email funtion to send email
      emailSend(email,subject,text); 
@@ -208,8 +208,12 @@ exports.updateUserAccount = async (req, res, next) => {
     if (!user) {  
       throw createHttpError(404, "User not found");
     }
-    const { profile } = req.files;  
-    if (profile) {
+    
+
+
+    if (req.files !== null) {
+
+       const { profile } = req.files; 
       // call the uploadImageToDrive function for uploading image to google drive
       const { filepath } = await uploadImageToDrive(profile);
       user.profile = filepath;

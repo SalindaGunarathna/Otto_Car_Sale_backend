@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Vehicle = require('../vehicle');
+const Vehicle = require('../../../model/vehicle');
 
 require('dotenv').config();
 
