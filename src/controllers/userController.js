@@ -122,13 +122,19 @@ exports.adminRegistration = async (req, res, next) => {
     if (!firstName || !email || !password) {
       throw createHttpError(400, "please provide all required information");
     }
-    const { profile } = req.files;// load the image from req.files
+
+
+    if (req.file !=null){
+      const { profile } = req.files;// load the image from req.files
 
     // call the uploadImageToDrive function for uploading image to google drive
-    const { filepath } = await uploadImageToDrive(profile);
+    const { filepath } = await uploadImageToDrive(profile);// set profile Url  path to store in data base
 
+    }else{
+     
+      filepath= " "
+    }    
     
-    // set profile Url  path to store in data base
     // create new user
     const user = new User({
       firstName,
@@ -162,9 +168,16 @@ exports.customerRegistration = async (req, res, next) => {
     }
     const { profile } = req.files;// load the image from req.files
 
-    // call the uploadImageToDrive function for uploading image to google drive
-    const { filepath } = await uploadImageToDrive(profile);
+    if (req.file !=null){
+      const { profile } = req.files;// load the image from req.files
 
+    // call the uploadImageToDrive function for uploading image to google drive
+    const { filepath } = await uploadImageToDrive(profile);// set profile Url  path to store in data base
+
+    }else{
+     
+      filepath= " "
+    }    
     
     // set profile Url  path to store in data base
     // create new user
@@ -201,7 +214,7 @@ exports.logout = async (req, res, next) => {
 
 exports.updateUserAccount = async (req, res, next) => {
   const id = req.user._id; 
-   const { firstName, email,lastName ,phoneNO,address} = req.body;
+   const { firstName,lastName ,phoneNO,address} = req.body;
 
   try {
     const user = await User.findById(id);
@@ -220,7 +233,6 @@ exports.updateUserAccount = async (req, res, next) => {
     } 
 
     user.firstName = firstName;
-    user.email = email;
     user.lastName = lastName;
     user.phoneNO = phoneNO;
     user.address = address;

@@ -51,13 +51,26 @@ exports.addvehicle = async (req, res, next) => {
   var album = [];
 
   try {
-    const { image } = req.files;
+    
 
     var validate = await validateVehicleData(req.body);
 
+    if (req.files !=null)
+    {
+      const { image } = req.files;
+      
+      if (image) {
+        const { filepath } = await uploadImageToDrive(image);
+        album.push({
+          photoURL: filepath,
+        });
+      }
+    }else{
+      album = null
+    }
 
-    album = await createImageAlbum(image);
 
+    
 
     const vehicle = new Vehicle({
       vehicleId,

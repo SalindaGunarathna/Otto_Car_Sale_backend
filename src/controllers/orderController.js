@@ -107,11 +107,13 @@ exports.editOrder = async (req, res, next) => {
 
     try {
         const order = await Order.findById(id);
-        const customerEmail = order.customerEmail
+        
 
         if (!order) {
             throw createHttpError(404, "order not found");
         } else {
+            
+            const customerEmail = order.customerEmail
             if (order.status !== newStatus) {
                 order.status = newStatus
 

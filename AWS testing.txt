@@ -1,0 +1,37 @@
+vehiele
+
+find  one vehicle 
+find all vehicle
+similar  type vehicle
+delete vehicle
+
+ 
+
+-check without image-- add vehicle ,image upload{Cannot destructure property 'image' of 'req.files' as it is null."} 
+
+---- image upload ,image upload 
+
+
+user
+===============
+login
+reset password 
+forgot password 
+login profile admin 
+login customer profile
+
+--check withiu image --registration admin ,customer 
+--heck without image ---update user profile 
+
+order
+================
+add order 
+retrieve all orders 
+order delete
+find one order 
+
+
+--check--order update  server down 
+--- issue in customer order it given all order not specific customers one 
+
+
