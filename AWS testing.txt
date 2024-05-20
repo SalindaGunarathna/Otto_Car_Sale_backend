@@ -5,6 +5,9 @@ find all vehicle
 similar  type vehicle
 delete vehicle
 
+- add vehicle without image pass
+
+
  
 
 -check without image-- add vehicle ,image upload{Cannot destructure property 'image' of 'req.files' as it is null."} 
@@ -20,8 +23,9 @@ forgot password
 login profile admin 
 login customer profile
 
---check withiu image --registration admin ,customer 
---heck without image ---update user profile 
+without image pass two registration 
+
+
 
 order
 ================
@@ -30,8 +34,6 @@ retrieve all orders
 order delete
 find one order 
 
-
---check--order update  server down 
 --- issue in customer order it given all order not specific customers one 
 
  //"googleapis": "^129.0.0",

@@ -8,7 +8,7 @@ const bcrypt = require("bcryptjs");
 const path = require("path");
 const fs = require("fs");
 
-const { google } = require("googleapis");
+
 const { version } = require("os");
 
 const {
@@ -166,7 +166,7 @@ exports.customerRegistration = async (req, res, next) => {
     if (!firstName || !email || !password) {
       throw createHttpError(400, "please provide all required information");
     }
-    const { profile } = req.files;// load the image from req.files
+    
 
     if (req.file !=null){
       const { profile } = req.files;// load the image from req.files
