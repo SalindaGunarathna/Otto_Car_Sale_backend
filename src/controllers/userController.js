@@ -123,12 +123,15 @@ exports.adminRegistration = async (req, res, next) => {
       throw createHttpError(400, "please provide all required information");
     }
 
+    console.log(req.files)
 
-    if (req.file !=null){
+
+    if (req.files !=null){
+      console.log(req.files)
       const { profile } = req.files;// load the image from req.files
 
     // call the uploadImageToDrive function for uploading image to google drive
-    const { filepath } = await uploadImageToDrive(profile);// set profile Url  path to store in data base
+    var { filepath } = await uploadImageToDrive(profile);// set profile Url  path to store in data base
 
     }else{
      

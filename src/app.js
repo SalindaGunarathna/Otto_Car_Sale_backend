@@ -6,8 +6,9 @@ app.use(express.json());
 const createHttpError = require('http-errors')
 const fileUpload = require('express-fileupload'); 
 const bodyParser = require('body-parser');
+const path = require('path');
 
-
+app.use('/public', express.static(path.join(__dirname, '..', '..', '..', 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(bodyParser.raw()); 

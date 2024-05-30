@@ -39,7 +39,9 @@ const uploadImageToDrive = async (file) => {
     const uniqueFilename = `${uniqueId}.${fileExtension}`;
 
     // Set the local file path with the unique filename
-    let filepath = __dirname + "../../../../public/file/" + uniqueFilename;
+    // let filepath = __dirname + "../../../../public/file/" + uniqueFilename;  
+    // console.log(__dirname);
+    let filepath = path.join(__dirname,  '..', '..', '..', 'public', 'file', uniqueFilename);
 
     //let filepath = path.join(__dirname, "../../../../public/file", uniqueFilename);
 
