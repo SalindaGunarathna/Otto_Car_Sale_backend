@@ -11,13 +11,10 @@ const fs = require("fs");
 
 const { version } = require("os");
 
-const {
-  uploadImageToDrive,
-  deleteFile,
-} = require("./service/fileUploadContrller");
 
 
-const emailSend = require("./service/sendEmail");
+
+const emailSend = require("../service/sendEmail");
 const { config } = require("dotenv");
 
 
@@ -112,7 +109,7 @@ exports.resetPassword = async (req, res, next) => {
 
 //Crete new user  Controller function
 exports.adminRegistration = async (req, res, next) => {
-  const { firstName, email, password,lastName,phoneNO,address,SECRET_KEY } = req.body;
+  const { firstName, email, password,lastName,phoneNO,address,SECRET_KEY, profile } = req.body;
 
   const role = "Admin"
   try {
@@ -122,29 +119,13 @@ exports.adminRegistration = async (req, res, next) => {
     if (!firstName || !email || !password) {
       throw createHttpError(400, "please provide all required information");
     }
-
-    console.log(req.files)
-
-
-    if (req.files !=null){
-      console.log(req.files)
-      const { profile } = req.files;// load the image from req.files
-
-    // call the uploadImageToDrive function for uploading image to google drive
-    var { filepath } = await uploadImageToDrive(profile);// set profile Url  path to store in data base
-
-    }else{
-     
-      filepath= " "
-    }    
-    
     // create new user
     const user = new User({
       firstName,
       email,
       password,
       lastName,
-      profile: filepath,
+      profile,
       role:role,
       phoneNO
       ,address
@@ -161,35 +142,20 @@ exports.adminRegistration = async (req, res, next) => {
 
 
 exports.customerRegistration = async (req, res, next) => {
-  const { firstName, email, password,lastName ,phoneNO,address} = req.body;
+  const { firstName, email, password,lastName ,phoneNO,address, profile} = req.body;
   const role = "Customer"
-
   
   try {
     if (!firstName || !email || !password) {
       throw createHttpError(400, "please provide all required information");
-    }
-    
-
-    if (req.file !=null){
-      const { profile } = req.files;// load the image from req.files
-
-    // call the uploadImageToDrive function for uploading image to google drive
-    const { filepath } = await uploadImageToDrive(profile);// set profile Url  path to store in data base
-
-    }else{
-     
-      filepath= " "
-    }    
-    
-    // set profile Url  path to store in data base
+    }  
     // create new user
     const user = new User({
       firstName,
       email,
       password,
       lastName,
-      profile: filepath,
+      profile,
       role:role
       ,phoneNO
       ,address
@@ -217,28 +183,19 @@ exports.logout = async (req, res, next) => {
 
 exports.updateUserAccount = async (req, res, next) => {
   const id = req.user._id; 
-   const { firstName,lastName ,phoneNO,address} = req.body;
+   const { firstName,lastName ,phoneNO,address,profile} = req.body;
 
   try {
     const user = await User.findById(id);
     if (!user) {  
       throw createHttpError(404, "User not found");
-    }
-    
-
-
-    if (req.files !== null) {
-
-       const { profile } = req.files; 
-      // call the uploadImageToDrive function for uploading image to google drive
-      const { filepath } = await uploadImageToDrive(profile);
-      user.profile = filepath;
     } 
 
     user.firstName = firstName;
     user.lastName = lastName;
     user.phoneNO = phoneNO;
     user.address = address;
+    user.profile = profile;
     const result = await user.save(); 
     res.send(result); 
   } catch (error) {

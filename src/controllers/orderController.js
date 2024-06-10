@@ -1,10 +1,10 @@
 const createHttpError = require("http-errors");
 const Order = require("../model/oreder");
-const { validateOrderData, validateEditedData } = require("../controllers/service/validateOrderData"); //orderValidate = require("../controllers/service/validateOrderData");
+const { validateOrderData, validateEditedData } = require("../validaters/validateOrderData"); //orderValidate = require("../controllers/service/validateOrderData");
 require("dotenv").config();
 //const EmailMessage = require("../model/emailMessage");
-const emailSend = require("./service/sendEmail");
-const EmailMessage = require('./service/massageGenarator');
+const emailSend = require("../service/sendEmail");
+const EmailMessage = require('../service/massageGenarator');
 
 
 

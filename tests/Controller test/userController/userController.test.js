@@ -1,11 +1,11 @@
-const { login } = require('../../../controllers/userController'); // Assuming your controller file is named userController.js
-const User = require('../../../model/user');
+const { login } = require('../../../src/controllers/userController'); // Assuming your controller file is named userController.js
+const User = require('../../../src/model/user');
 
 const createHttpError = require('http-errors');
 
 
 // Mock dependencies
-jest.mock('../../../model/user');
+jest.mock('../../../src/model/user');
 jest.mock('http-errors');
 
 describe('User Controller - login', () => {
