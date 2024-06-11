@@ -40,7 +40,7 @@ const VehicleSchema = new Schema({
      // Whether the vehicle was locally assembled
     vehicleType: {
         type: String,
-        enum:['car', 'bike', 'van', 'truck', 'cab'],
+        enum:['Car', 'Bike', 'Van', 'Truck', 'Cab'],
         maxlenght:20,
         required:false
     }, // Category of the vehicle (e.g., truck, van, car)

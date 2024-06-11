@@ -1,4 +1,4 @@
- const createHttpError = require("http-errors");
+const createHttpError = require("http-errors");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const Vehicle = require("../model/vehicle");
@@ -9,18 +9,16 @@ require("dotenv").config();
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
-const {
-  uploadImageToDrive,
-  deleteFile,
-} = require("./service/fileUploadContrller");
 
-const VehicleQueryBuilder = require("./service/vehicleQueryBullder")
 
-const validateVehicleData = require("./service/validateVehicleData");
+const VehicleQueryBuilder = require("../service/vehicleQueryBullder")
+
+const validateVehicleData = require("../validaters/validateVehicleData");
+
+
 const {
   createImageAlbum,
-  deleteAlbum,
-} = require("./service/imageAlbumController");
+} = require("../service/imageAlbumController"); 
 
 // add new vehicle
 exports.addvehicle = async (req, res, next) => {
@@ -46,31 +44,20 @@ exports.addvehicle = async (req, res, next) => {
     style,
     model,
     manufacturedYear,
+    images
   } = req.body;
 
-  var album = [];
-
   try {
-    
 
     var validate = await validateVehicleData(req.body);
 
-    if (req.files !=null)
-    {
-      const { image } = req.files;
-      
-      if (image) {
-        const { filepath } = await uploadImageToDrive(image);
-        album.push({
-          photoURL: filepath,
-        });
-      }
-    }else{
-      album = null
+    if (images && images.length > 0) {
+
+      var album = await createImageAlbum(images);
+      validate.album = album
+    } else {
+      validate.album = null
     }
-
-
-    
 
     const vehicle = new Vehicle({
       vehicleId,
@@ -109,17 +96,14 @@ exports.addvehicle = async (req, res, next) => {
 
 //remove vehicle
 exports.deleteVehicle = async (req, res, next) => {
-  const id= req.params.id;
-  
+  const id = req.params.id;
   try {
     const vehicle = await Vehicle.findOneAndDelete({ _id: id });
 
     if (!vehicle) {
       throw createHttpError(404, "vehicle not found ");
     } else {
-      const album = vehicle.album;
-      await deleteAlbum(album);
-      res.status(200).send(vehicle);
+      res.status(200).send(`Vehicle with ID ${vehicle.vehicleId} deleted successfully`);
     }
   } catch (error) {
     next(error);
@@ -150,9 +134,9 @@ exports.updateVehicle = async (req, res, next) => {
     assembled,
     vehicleType,
     brand,
+    images
   } = req.body;
 
-  var album = [];
 
   try {
     const oldVehicle = await Vehicle.findOne({ _id: id });
@@ -161,35 +145,14 @@ exports.updateVehicle = async (req, res, next) => {
       throw createHttpError(404, "vehicle not Found ");
     } else {
 
-      console.log(req.files);
-      album = oldVehicle.album;
-      // since this is update no need to validate
-      // await validateVehicleData(req.body);
+      var album = [];
 
-      if (req.files !==null) {
+      if (images && images.length > 0) {
 
-        const { images } = req.files;
-        console.log("image found");
-        const NewAlbum = await createImageAlbum(images);     
+        album = await createImageAlbum(images);
 
-        if (NewAlbum) {
-          console.log(NewAlbum[0].photoURL);
-
-          album.push({
-            photoURL: NewAlbum[0].photoURL,
-            ///photID: NewAlbum[0].photID,
-          });
-          // for (const image of NewAlbum) {
-
-          //   console.log(image.fileUploadPath, image.fileID);
-
-          //   album.push({
-          //     photoURL: image.fileUploadPath,
-          //     photID: image.fileID,
-          //   });
-          // }
-        }
-        // var deleteStatus = await deleteFile(file_id);
+      } else {
+        album = null
       }
 
       oldVehicle.vehicleId = vehicleId;
@@ -252,7 +215,7 @@ exports.findOneVehicle = async (req, res, next) => {
   try {
     const selectedVehicle = await Vehicle.find({ _id: id });
 
-    res.send(selectedVehicle);  
+    res.send(selectedVehicle);
   } catch (error) {
     next(error);
   }
@@ -261,10 +224,10 @@ exports.findOneVehicle = async (req, res, next) => {
 // retrieve vehicles by filtering by serching
 exports.retrieveVehicle = async (req, res, next) => {
 
-    const { vehicleType, brand, model, style, fuelType, manufacturedYear } =
-      req.body;
+  const { vehicleType, brand, model, style, fuelType, manufacturedYear } =
+    req.body;
 
- // const token = req.params.token;
+  // const token = req.params.token;
   console.log(req.body);
 
   try {
@@ -323,19 +286,19 @@ exports.retrieveAllVehicle = async (req, res, next) => {
 
     vehicles.forEach((vehicle) => {
       switch (vehicle.vehicleType) {
-        case "car":
+        case "Car":
           separatedVehicles.car.push(vehicle);
           break;
-        case "bike":
+        case "Bike":
           separatedVehicles.bike.push(vehicle);
           break;
-        case "van":
+        case "Van":
           separatedVehicles.van.push(vehicle);
           break;
-        case "truck":
+        case "Truck":
           separatedVehicles.truck.push(vehicle);
           break;
-        case "cab":
+        case "Cab":
           separatedVehicles.cab.push(vehicle);
           break;
         default:
@@ -346,49 +309,6 @@ exports.retrieveAllVehicle = async (req, res, next) => {
     res.send(separatedVehicles);
   } catch (error) {
     next(error);
-  }
-};
-
-// upload new image
-exports.uploadImage = async (req, res, next) => {
-  const id = req.params.id;
-
-  const {image} = req.files;
-
-  if (image) {
-    try {
-      const vehicle = await Vehicle.findOne({ _id: id });
-
-
-      if (vehicle) {
-
-       
-
-        const NewAlbum = await createImageAlbum(image);
-
-
-
-        if (NewAlbum) {
-          console.log(NewAlbum[0].photoURL);
-
-          vehicle.album.push({
-            photoURL:NewAlbum[0].photoURL,
-            //  photID: NewAlbum[0].photID,
-          });
-
-
-        }
-        const updateVehicle = await vehicle.save();
-
-        res.send(updateVehicle);
-
-
-      }
-    } catch (error) {
-      next(error);
-    }
-  } else {
-    throw createHttpError(404, "req,files are empty");
   }
 };
 
