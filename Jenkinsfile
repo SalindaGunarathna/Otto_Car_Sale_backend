@@ -20,7 +20,7 @@ pipeline {
         DOCKERHUB_REPO = 'salindadocker/otto-sale-backend'
         DOCKERHUB_API_URL = "https://hub.docker.com/v2/repositories/${DOCKERHUB_REPO}/"
         HOST_SSH_CREDENTIALS = 'hostmachine-ssh-id'
-        HOST_MACHINE_IP = '54.211.170.158'
+        HOST_MACHINE_IP = "${HOST_MACHINE_IP}"
         HOST_MACHINE_USER = 'client'
         MONGO_URI_CREDENTIALS_ID = 'mongo-sale-url'
         SECRET_KEY_CREDENTIAL_ID = 'secret-key-id'
