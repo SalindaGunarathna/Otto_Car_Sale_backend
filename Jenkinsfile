@@ -100,9 +100,9 @@ pipeline {
                             docker pull ${DOCKERHUB_REPO}:latest
                             docker stop otto-sale-backend || true
                             docker rm otto-sale-backend || true
-                            docker run -d -p 4000:4000 --name otto-sale-backend \
+                            docker run -d -p 3001:3001 --name otto-sale-backend \
                                 -e MONGO_URL="$MONGODB_URL" \
-                                -e PORT="4000" \
+                                -e PORT="3001" \
                                 -e SECRET_KEY="${SECRET_KEY}" \
                                 -e OWNER_EMAIL="${OWNER_EMAIL}" \
                                 -e PASSWORD="${PASSWORD}" \
