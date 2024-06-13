@@ -5,14 +5,9 @@ require("dotenv").config();
 //const EmailMessage = require("../model/emailMessage");
 const emailSend = require("../service/sendEmail");
 const EmailMessage = require('../service/massageGenarator');
-
-
-
-
-const adminAuth = require('../middleware/adminMiddleware')
+const ownerEmail = process.env.OWNER_EMAIL
 
 exports.createOrder = async (req, res, next) => {
-
     const {
         customerName,
         customerID,
@@ -27,21 +22,10 @@ exports.createOrder = async (req, res, next) => {
         customerMobileNumber
     } = req.body;
 
-
-
     var items = [];
-
-
-
     try {
-
-
         const isvalidate = validateOrderData(req);
-
-
         if (isvalidate) {
-
-
             items.push({
                 vehicleBrand: vehicleBrand,
                 vehicleModel: vehicleModel,
@@ -51,9 +35,7 @@ exports.createOrder = async (req, res, next) => {
                 quantity: quantity
             });
 
-            // herre calculate Totale Charge of order
-
-            const order = await new Order({
+      const order = await new Order({
                 customerName,
                 customerEmail,
                 customerID,
@@ -62,31 +44,21 @@ exports.createOrder = async (req, res, next) => {
                 customerAddress,
                 items
             })
-
             var result = await order.save();
 
             const subject = "Octo care sale new vehicle request"
-            const ownerEMAIL = "salinda.eng@gmail.com";
 
             const emailMessage = new EmailMessage(result);
 
-
-
             // send email to owner
             const OwnerEmailBody = emailMessage.OwnerEmail();
-            await emailSend(ownerEMAIL, subject, OwnerEmailBody);
-
+            await emailSend(ownerEmail, subject, OwnerEmailBody);
 
             // send email to customer
             const CustomerEmailBody = emailMessage.CustomerEmail();
             await emailSend(customerEmail, subject, CustomerEmailBody);
 
-
             res.send(result);
-
-
-
-
 
         };
 
@@ -107,8 +79,6 @@ exports.editOrder = async (req, res, next) => {
 
     try {
         const order = await Order.findById(id);
-        
-
         if (!order) {
             throw createHttpError(404, "order not found");
         } else {
@@ -127,7 +97,6 @@ exports.editOrder = async (req, res, next) => {
                 });
             }
 
-
             const updateorder = await order.save();
 
             const subject = "Octo care sale ordder status updated"
@@ -143,15 +112,10 @@ exports.editOrder = async (req, res, next) => {
     } catch (error) {
         throw createHttpError(400, error);
     }
-
-
 }
-
-
 
 exports.retrieveAll = async(req,res,next)=>{
     try {
-
         const allorder  = await Order.find({})
         res.send(allorder)
         
@@ -177,24 +141,20 @@ exports.retrievCustomerOrders = async(req,res,next)=>{
 // delete order
 exports.deleteOrder = async(req,res,next)=>{
     const id = req.params.id
-
     try {
         const order = await Order.findByIdAndDelete(id)
     res.send("Successfully  Order deleted")
     } catch (error) {
 
-       next(error)
-        
-    }
-    
+       next(error)     
+    }  
 }
 
 // retrieve one order
 exports.retrieveOneOrder = async(req,res,next)=>{
     const id = req.params.id
     try {
-        const order = await Order.findById(id)
-        
+        const order = await Order.findById(id)    
         res.send(order)
     } catch (error) {
         next(error)
