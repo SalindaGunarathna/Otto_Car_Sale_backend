@@ -4,34 +4,37 @@ const User = require("../model/user");
 require('dotenv').config();
 
 const SECRET_KEY = process.env.SECRET_KEY
+const SECRET_KEY_BASE64 = process.env.SECRET_KEY_NEW
+
+const secretKey = Buffer.from(SECRET_KEY_BASE64, 'base64');
 
 const adminAuth = async (req, res, next) => {
     try {
 
         const token = req.header('Authorization').replace('Bearer ', "")
-        const decode = jwt.verify(token, SECRET_KEY)
+        try
+        {
+            var decode = jwt.verify(token, secretKey) 
+            console.log(decode)
+        }
+        catch(error)
+        {
+            console.log(error)
+            throw createHttpError(401, 'Unauthorized - Invalid token');  
+            
+        }
+        // Extract userId and role from the decoded token
+        const userId = decode.userId;
+        const roles = decode.role;
 
-        const user = await User.findOne(
-            {
-                _id: decode._id,
-                "tokens.token": token,
-            }
-        )
-
-        if (user.role !== "Admin" || !user) {
-            throw createHttpError("this user have no permission", 401)
+        // Check if the user has the "Admin" role
+        const isAdmin = roles.some(role => role.authority === 'ADMIN');
+        if (!isAdmin) {
+            throw createHttpError(403, 'Forbidden - Admin role required');
         }
 
-        const isValidToken = user.tokens.some(userToken => userToken.token === token);
-        if (!isValidToken) {
-            throw createHttpError("Unauthorized - Invalid token");
-        }
-
-        req.token = token
-        req.user = user
-
-        
-
+        req.userId = userId
+        req.userRole = roles
         next()
 
     } catch (error) {
