@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const VehicleSchema = new Schema({
-    vehicleId: { type: String, required:false, unique:false, maxlenght: 50 },
-    vehiclePrice: { type: String, required:false, maxlenght: 50 },
+    vehicleId: { type: String, required:true, unique:True, maxlenght: 50 },
+    vehiclePrice: { type: String, required:true, maxlenght: 50 },
 
     chassisNumber: { type: String, required:false, maxlength: 50 }, 
     // Chassis number for reference
@@ -16,7 +16,7 @@ const VehicleSchema = new Schema({
      // Name of the owning company
     numberOfDoors: { type: Number, required:false,min:1,max:10 },
      // Number of doors on the vehicle
-    color: { type: String, required:false, maxlength: 50 },
+    color: { type: String, required:true, maxlength: 50 },
 
     seatingCapacity: { type: Number, required:false,min:1,max:80 },
      // Maximum number of passengers
@@ -42,7 +42,7 @@ const VehicleSchema = new Schema({
         type: String,
         enum:['Car', 'Bike', 'Van', 'Truck', 'Cab'],
         maxlenght:20,
-        required:false
+        required:true
     }, // Category of the vehicle (e.g., truck, van, car)
     brand: { type: String, required:false,maxlenght:50 },
     style: { type: String,maxlenght:50 },
