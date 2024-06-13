@@ -1,7 +1,7 @@
 const mongoose  = require("mongoose")
 require('dotenv').config();
 const port = process.env.PORT
-const path = process.env.MONGO_URI
+const path = process.env.MONGO_URL
 
 const app = require('./app')
 
