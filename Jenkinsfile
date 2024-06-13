@@ -87,7 +87,7 @@ pipeline {
                         string(credentialsId: MONGO_URI_CREDENTIALS_ID, variable: 'MONGO_URL'),
                         string(credentialsId: SECRET_KEY_CREDENTIAL_ID, variable: 'SECRET_KEY_DEFAULT'),
                         string(credentialsId: OWNER_EMAIL_CREDENTIAL_ID, variable: 'OWNER_EMAIL_DEFAULT'),
-                        string(credentialsId: PASSWORD_CREDENTIAL_ID, variable: 'PASSWORD_DEFAULT')
+                        string(credentialsId: PASSWORD_CREDENTIAL_ID, variable: 'PASSWORD_DEFAULT'),
                         string(credentialsId: SYSTEM_EMAIL_ID, variable: 'SYSTEM_EMAIL_DEFAULT')
                     ]) {
                         def SECRET_KEY = params.SECRET_KEY ?: env.SECRET_KEY_DEFAULT
