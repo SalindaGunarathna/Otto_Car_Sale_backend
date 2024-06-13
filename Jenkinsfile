@@ -98,9 +98,9 @@ pipeline {
                         sh """
                         ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no ${HOST_MACHINE_USER}@${HOST_MACHINE_IP} '
                             docker pull ${DOCKERHUB_REPO}:latest
-                            docker stop fileuploader || true
-                            docker rm fileuploader || true
-                            docker run -d -p 4000:4000 --name fileuploader \
+                            docker stop otto-sale-backend || true
+                            docker rm otto-sale-backend || true
+                            docker run -d -p 4000:4000 --name otto-sale-backend \
                                 -e MONGO_URL="$MONGODB_URL" \
                                 -e PORT="4000" \
                                 -e SECRET_KEY="${SECRET_KEY}" \
