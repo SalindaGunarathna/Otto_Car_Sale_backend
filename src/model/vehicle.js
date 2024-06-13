@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const VehicleSchema = new Schema({
-    vehicleId: { type: String, required:true, unique:True, maxlenght: 50 },
+    vehicleId: { type: String, required:true, unique:true, maxlenght: 50 },
     vehiclePrice: { type: String, required:true, maxlenght: 50 },
 
     chassisNumber: { type: String, required:false, maxlength: 50 }, 
@@ -58,5 +58,5 @@ const VehicleSchema = new Schema({
 
 
 
-const Vehicle = mongoose.model('Vehicle', VehicleSchema);
+const Vehicle = mongoose.model('Vehicle', VehicleSchema);  
 module.exports = Vehicle;
