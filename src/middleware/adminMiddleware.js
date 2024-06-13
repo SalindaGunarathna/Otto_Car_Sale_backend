@@ -3,8 +3,8 @@ const createHttpError = require('http-errors');
 const User = require("../model/user");
 require('dotenv').config();
 
-const SECRET_KEY = process.env.SECRET_KEY
-const SECRET_KEY_BASE64 = process.env.SECRET_KEY_NEW
+
+const SECRET_KEY_BASE64 = process.env.SECRET_KEY
 
 const secretKey = Buffer.from(SECRET_KEY_BASE64, 'base64');
 
